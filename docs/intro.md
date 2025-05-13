@@ -2,4 +2,6 @@
 sidebar_position: 1
 ---
 
-# Docs Intro
+# Intro
+
+En este sitio recopilaremos toda la documentación relativa al análisis y la migración del frontal admin-tool.
