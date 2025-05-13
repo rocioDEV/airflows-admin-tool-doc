@@ -67,6 +67,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
+    defaultMode: "dark",
     image: "img/docusaurus-social-card.jpg",
     navbar: {
       title: "Home",
