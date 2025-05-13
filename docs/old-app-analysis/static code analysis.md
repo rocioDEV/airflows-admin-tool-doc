@@ -2,8 +2,6 @@
 sidebar_position: 2
 ---
 
-# Static code analysis
+# Análisis estático del código
 
-![Dependencies Diagram](./img/dependencies.png)
-
-TBC
+![Dependencies Diagram](./img/static.png)
