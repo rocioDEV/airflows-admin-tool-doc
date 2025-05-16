@@ -67,9 +67,11 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    defaultMode: "dark",
-    respectPrefersColorScheme: false,
-    disableSwitch: true,
+    colorMode: {
+      defaultMode: "dark",
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
     image: "img/docusaurus-social-card.jpg",
     navbar: {
       title: "Home",
@@ -82,7 +84,7 @@ const config: Config = {
           type: "docSidebar",
           sidebarId: "tutorialSidebar",
           position: "left",
-          label: "Docs",
+          label: "Documentación",
         },
         // { to: "/blog", label: "Blog", position: "left" },
         {
@@ -96,17 +98,12 @@ const config: Config = {
       style: "dark",
       links: [
         {
-          title: "Docs",
+          title: "Enlaces",
           items: [
             {
-              label: "Docs",
+              label: "Documentación",
               to: "/docs/intro",
             },
-          ],
-        },
-        {
-          title: "More",
-          items: [
             {
               label: "GitHub",
               href: "https://github.com/Air-Flows-Data-Platform",
