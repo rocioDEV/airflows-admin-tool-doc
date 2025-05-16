@@ -9,17 +9,18 @@ sidebar_position: 1
 - Muchas dependencias están **2, 3 o más versiones major por detrás** (ej: `react`, `react-dom`, `material-ui`, `cypress`, `date-fns`, `i18next`, etc.).
 - Esto implica que el esfuerzo de migración es alto y el riesgo de vulnerabilidades es real y creciente.
 
-
 ### 1. Riesgos de seguridad
+
 - Las versiones antiguas de librerías suelen tener **vulnerabilidades conocidas** que los atacantes pueden explotar. Los parches de seguridad solo se publican en versiones recientes.
 
-
 ### 2. Problemas de mantenimiento
+
 - Las APIs cambian entre versiones major, por lo que cuanto más tiempo pasa, más difícil y costosa es la migración (puede requerir refactorizaciones grandes).
 - Las sub-dependencias también pueden quedar obsoletas, generando un efecto cascada.
 - La comunidad y los foros tienden a enfocarse en versiones recientes, dificultando encontrar soporte o ejemplos para versiones viejas.
 
 ### 3. Compatibilidad y nuevas funcionalidades
+
 - No se pueden aprovechar nuevas características, mejoras de rendimiento o integraciones modernas.
 - Algunas herramientas o servicios externos pueden dejar de funcionar con versiones antiguas.
 
@@ -27,7 +28,7 @@ sidebar_position: 1
 
 ## Ejemplo concreto de vulnerabilidad: `jsonwebtoken@8.5.1`
 
-- **Vulnerabilidad**: CVE-2022-23529 (y otras asociadas a versiones <9.0.0)
+- **Vulnerabilidad**: CVE-2022-23529 (y otras asociadas a versiones anteriores a la 9.0.0)
 - **Descripción**: Permite, bajo ciertas condiciones, ejecución remota de código (RCE) si un atacante puede manipular el parámetro `secretOrPublicKey` en la función `jwt.verify()`. Esto puede ocurrir si la gestión de claves es insegura o si hay una mala configuración.
 - **Impacto**: Un atacante podría ejecutar código arbitrario en el servidor, comprometiendo la integridad y confidencialidad de la aplicación.
 - **Solución**: Actualizar a `jsonwebtoken` 9.0.0 o superior, donde se han añadido controles de tipo y validaciones adicionales para evitar este tipo de ataques.
