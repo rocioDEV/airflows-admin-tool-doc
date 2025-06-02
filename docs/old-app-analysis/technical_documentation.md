@@ -2,7 +2,7 @@
 sidebar_position: 4
 ---
 
-# **Documentación Técnica: `useOnSaveEntity`**
+# Documentación Técnica: `useOnSaveEntity`
 
 ## **Propósito**
 El hook `useOnSaveEntity` se encarga de gestionar la lógica para guardar o actualizar una entidad en la aplicación. Procesa los valores del formulario, valida los atributos, construye consultas GraphQL y realiza llamadas a la API para guardar o actualizar la entidad en el backend. También maneja la navegación y actualizaciones de estado según el resultado de las operaciones.
