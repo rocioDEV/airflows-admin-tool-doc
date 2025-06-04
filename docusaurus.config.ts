@@ -74,7 +74,6 @@ const config: Config = {
     },
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "Home",
       logo: {
         alt: "Airflows admin tool Logo",
         src: "img/logo.png",
