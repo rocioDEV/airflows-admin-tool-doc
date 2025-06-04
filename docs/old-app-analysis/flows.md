@@ -8,7 +8,7 @@ Discovery de flujos implementados actualmente en el frontal
 
 ## SignIn, Dashboard y refresh
 
-![Dependencies Diagram](./img/signin.png)
+![SignIn](./img/signin.png)
 
 Se extraen los siguienres requisitos funcionales:
 
@@ -19,3 +19,11 @@ Se extraen los siguienres requisitos funcionales:
         - si no tenemos nada, vamos al login
 
         (TBC: añadir redirección IAM y seteo idioma del usuario)
+
+
+## onSaveEntity
+
+![onSaveEntity](./img/onsaveentity.png)
+
+Se extraen los siguienres requisitos funcionales:
+(TBC)
