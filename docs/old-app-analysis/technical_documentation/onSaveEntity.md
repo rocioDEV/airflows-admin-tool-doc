@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Documentación Técnica: `useOnSaveEntity`
+# `useOnSaveEntity`
 
 ## **Propósito**
 
@@ -10,27 +10,26 @@ El hook `useOnSaveEntity` se encarga de gestionar la lógica para guardar o actu
 
 ---
 
-## **Entradas**
+## **Parámetros**
+El hook recibe los siguientes parámetros:
 
-El hook recibe los siguientes parámetros como entradas:
-
-| Parámetro        | Tipo                                    | Descripción                                                                                                       |
-| ---------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `entity`         | `string`                                | Nombre de la entidad que se está guardando o actualizando.                                                        |
-| `entityId`       | `string`                                | Identificador único de la entidad. Si está definido, se actualiza la entidad; de lo contrario, se crea una nueva. |
-| `entityState`    | `EntityState`                           | Estado actual de la entidad, incluyendo atributos y claves principales.                                           |
-| `mode`           | `'view'                                 | 'edit'`                                                                                                           | Modo de operación: `'view'` o `'edit'`. |
-| `inputRefs`      | `Record<string, React.RefObject>`       | Referencias a los campos del formulario.                                                                          |
-| `baseUrl`        | `string`                                | URL base para las llamadas a la API.                                                                              |
-| `accessToken`    | `string`                                | Token de acceso para autenticación.                                                                               |
-| `model`          | `ParsedModel`                           | Modelo parseado que contiene metadatos sobre la entidad.                                                          |
-| `setEntityState` | `Dispatch<SetStateAction<EntityState>>` | Función para actualizar el estado de la entidad.                                                                  |
+| Parámetro          | Tipo                                   | Descripción                                                                 |
+|--------------------|----------------------------------------|-----------------------------------------------------------------------------|
+| `entity`           | `string`                              | Nombre de la entidad que se está guardando o actualizando.                  |
+| `entityId`         | `string`                              | Identificador único de la entidad. Si está definido, se actualiza la entidad; de lo contrario, se crea una nueva. |
+| `entityState`      | `EntityState`                         | Estado actual de la entidad, incluyendo atributos y claves principales.     |
+| `mode`             | `'view' | 'edit'`                     | Modo de operación: `'view'` o `'edit'`.                                     |
+| `inputRefs`        | `Record<string, React.RefObject>`      | Referencias a los campos del formulario.                                    |
+| `baseUrl`          | `string`                              | URL base para las llamadas a la API.                                        |
+| `accessToken`      | `string`                              | Token de acceso para autenticación.                                         |
+| `model`            | `ParsedModel`                         | Modelo parseado que contiene metadatos sobre la entidad.                    |
+| `setEntityState`   | `Dispatch<SetStateAction<EntityState>>`| Función para actualizar el estado de la entidad.                            |
 
 ---
 
 ## **Mapeos**
 
-El hook realiza los siguientes mapeos y transformaciones sobre las entradas:
+El hook realiza los siguientes mapeos y transformaciones sobre los parámetros:
 
 ### **1. Filtrado de Atributos**
 

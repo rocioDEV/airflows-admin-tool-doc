@@ -2,11 +2,11 @@
 sidebar_position: 2
 ---
 
-# Documentación técnica del tipo de atributo "selector externo"
+# Tipo de campo: "selector externo"
 
 ## Descripción general
 
-El `externalSelector` es un tipo de atributo especial que permite mostrar una interfaz externa través de un pop-up para que el usuario seleccione el valor del atributo. Proporciona una forma de **seleccionar valores desde fuentes externas** mientras mantiene el contexto del formulario actual.
+El `externalSelector` es un tipo de campo especial que permite mostrar una interfaz externa través de un pop-up para que el usuario seleccione el valor del campo. Proporciona una forma de **seleccionar valores desde fuentes externas** mientras mantiene el contexto del formulario actual.
 
 ## Propiedades de configuración
 
@@ -121,7 +121,7 @@ La URL del selector externo puede incluir los siguientes parámetros:
 - language: Idioma actual de la interfaz
 - entity: Nombre de la entidad actual
 - entityId: ID de la entidad actual
-- attribute: Nombre del atributo que se está seleccionando
+- attribute: Nombre del campo que se está seleccionando
 - access_token: (Opcional) Cuando addAccessToken está habilitado
 
 ## Ejemplo de valores de configuración
