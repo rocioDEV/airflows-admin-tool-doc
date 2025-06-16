@@ -26,8 +26,8 @@ export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title={`Airflows v2 - Documentation`}
+      description="Airflows v2 - Documentation"
     >
       <HomepageHeader />
       <main></main>
