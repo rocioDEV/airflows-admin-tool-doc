@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Análisis `localModel`
 
 1. Entidades principales del negocio:

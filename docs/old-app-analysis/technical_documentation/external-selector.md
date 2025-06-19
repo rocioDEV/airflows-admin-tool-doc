@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Tipo de campo: "selector externo"
+# Tipos de campo: selector externo
 
 ## Descripción general
 
@@ -11,7 +11,7 @@ El `externalSelector` es un tipo de campo especial que permite mostrar una inter
 ## Propiedades de configuración
 
 (en el orden en el que aparecen el el formulario de creación/edición de campos, sección **External selector**)
-![image](https://hackmd.io/_uploads/ByXvHI6mlx.png)
+![configuration](./img/external.png)
 
 ### 1. externalSelectorUrl
 
