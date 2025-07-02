@@ -1,0 +1,8 @@
+{
+  "label": "EntityView",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Vista de una entidad (visualicación / edición / creación)."
+  }
+}

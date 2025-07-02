@@ -1,8 +1,12 @@
-# Tipos de campo: acción
+---
+sidebar_position: 3
+---
+
+# Tipos de atributo: acción
 
 ## Descripción general
 
-El campo `action` es una propiedad booleana de un campo de entidad que determina si el campo está asociado con un comportamiento accionable. Cuando se establece en `true`, el campo se trata como una acción que puede activar funcionalidades específicas, como abrir una URL, ejecutar un comando u otras operaciones. Es decir, permite renderizar un botón en lugar de un campo para introducir valores, para facilitar que el usuario pueda introducir una acción personalizada dentro del formulario o el listado.
+El campo `action` es una propiedad booleana de un campo de entidad que determina si el atributo está asociado con un comportamiento accionable. Cuando se establece en `true`, el atributo se trata como una acción que puede activar funcionalidades específicas, como abrir una URL, ejecutar un comando u otras operaciones. Es decir, permite renderizar un botón en lugar de un campo para introducir valores, para facilitar que el usuario pueda introducir una acción personalizada dentro del formulario o el listado.
 
 ---
 
@@ -14,7 +18,7 @@ El campo `action` es una propiedad booleana de un campo de entidad que determina
 
 ### **Propósito:**
 
-El campo `action` se utiliza para definir si un campo representa un elemento accionable dentro de la aplicación. Se utiliza principalmente en componentes de renderizado y para manejar interacciones del usuario.
+El campo `action` se utiliza para definir si un atributo representa un elemento accionable dentro de la aplicación. Se utiliza principalmente en componentes de renderizado y para manejar interacciones del usuario.
 
 ---
 
@@ -22,7 +26,7 @@ El campo `action` se utiliza para definir si un campo representa un elemento acc
 
 ### **Renderización de botones de acción**
 
-El campo `action` se utiliza en la clase `EntityList` para renderizar botones para campos accionables:
+El campo `action` se utiliza en la clase `EntityList` para renderizar botones para atributos accionables:
 
 ```javascript
 // filepath: EntityList.js
@@ -46,7 +50,7 @@ render() {
 
 ### **Manejo de clics de acción**
 
-El método `handleActionClick` en la clase `EntityView` procesa el comportamiento asociado con campos accionables:
+El método `handleActionClick` en la clase `EntityView` procesa el comportamiento asociado con atributos accionables:
 
 ```javascript
 // filepath: EntityView.js
@@ -100,7 +104,7 @@ render() {
 
 ## Ejemplo
 
-Un campo con el campo `action` establecido en `true` podría representar una URL que abre una nueva página al hacer clic:
+Un atributo con el campo `action` establecido en `true` podría representar una URL que abre una nueva página al hacer clic:
 
 ```json
 {

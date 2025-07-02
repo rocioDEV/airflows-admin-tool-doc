@@ -1,9 +1,14 @@
-# uiType
-Cálculo y utilización del tipo de atributo (`uiType`) en el *Entity View*
+---
+sidebar_position: 1 
+---
+
+# Tipos de atributos
+
+Cálculo del tipo de campo (`uiType`) que corresponde a cada atributo de una entidad y renderizado de los distintos tipos de campos en el *EntityView*.
 
 ## Índice
 1. Visión general del flujo de datos
-2. Paso 1 – `mapAttributes.ts`: enriquecimiento y fijación de `uiType`
+2. Paso 1 – `mapAttributes.ts`: cálculo y fijación de `uiType`
 3. Paso 2 – `getUiType.ts`: algoritmo de clasificación
 4. Paso 3 – `useLoadEntityState.ts`: cómo llega el `uiType` al estado de la entidad
 5. Paso 4 – `getFieldRendererEntry.tsx`: selección del componente React
