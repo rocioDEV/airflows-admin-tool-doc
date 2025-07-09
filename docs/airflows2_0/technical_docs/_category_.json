@@ -1,0 +1,8 @@
+{
+  "label": "🖊️ Documentación técnica",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Airflows 2.0 es la nueva versión del frontal de administración de Airflows. Aquí podrás encontrar documentación técnica."
+  }
+}
