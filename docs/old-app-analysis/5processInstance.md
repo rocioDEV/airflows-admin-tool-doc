@@ -4,6 +4,7 @@ sidebar_position: 6
 
 # queryParam `processInstance`
 
+
 1. **Uso en la interfaz de usuario (EntityView.js)**:
    - El parámetro se obtiene de la URL usando: `getParameter("processInstance", document.location.search)`
    - Se utiliza principalmente en el contexto de flujos de trabajo (workflows)

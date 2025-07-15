@@ -4,6 +4,26 @@ sidebar_position: 4
 
 # Tipos de atributo: selector externo
 
+- [Tipos de atributo: selector externo](#tipos-de-atributo-selector-externo)
+  - [Descripción general](#descripción-general)
+  - [Propiedades de configuración](#propiedades-de-configuración)
+    - [1. externalSelectorUrl](#1-externalselectorurl)
+    - [2. externalSelectorTarget](#2-externalselectortarget)
+    - [3. externalSelectorWindowFeatures](#3-externalselectorwindowfeatures)
+    - [4. addAccessToken](#4-addaccesstoken)
+    - [5. externalSelectorEditableValue](#5-externalselectoreditablevalue)
+  - [Componentes de la interfaz](#componentes-de-la-interfaz)
+  - [Funcionalidad / Casos de uso](#funcionalidad--casos-de-uso)
+    - [Selección de un valor](#selección-de-un-valor)
+    - [Manejo de valores](#manejo-de-valores)
+    - [Funcionalidad de limpieza](#funcionalidad-de-limpieza)
+  - [Integración](#integración)
+    - [Comunicación entre ventanas](#comunicación-entre-ventanas)
+    - [Manejo de parámetros url](#manejo-de-parámetros-url)
+  - [Ejemplo de valores de configuración](#ejemplo-de-valores-de-configuración)
+  - [Limitaciones y notas](#limitaciones-y-notas)
+
+
 ## Descripción general
 
 El `externalSelector` es un tipo de campo especial que permite mostrar una interfaz externa través de un pop-up para que el usuario seleccione el valor del atributo. Proporciona una forma de **seleccionar valores desde fuentes externas** mientras mantiene el contexto del formulario actual.

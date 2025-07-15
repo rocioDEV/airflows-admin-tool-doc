@@ -4,6 +4,26 @@ sidebar_position: 2
 
 # Guardado de datos de una entidad (`useOnSaveEntity`)
 
+- [Guardado de datos de una entidad (`useOnSaveEntity`)](#guardado-de-datos-de-una-entidad-useonsaveentity)
+  - [**Propósito**](#propósito)
+  - [**Parámetros**](#parámetros)
+  - [**Mapeos**](#mapeos)
+    - [**1. Filtrado de Atributos**](#1-filtrado-de-atributos)
+    - [**2. Construcción de Consultas GraphQL**](#2-construcción-de-consultas-graphql)
+    - [**3. Manejo de Errores**](#3-manejo-de-errores)
+    - [**4. Navegación y Actualización de Estado**](#4-navegación-y-actualización-de-estado)
+  - [**Llamadas a la API**](#llamadas-a-la-api)
+    - [**1. Endpoint GraphQL**](#1-endpoint-graphql)
+    - [**2. Invocación de URL de Respaldo**](#2-invocación-de-url-de-respaldo)
+  - [**Flujo Lógico**](#flujo-lógico)
+  - [**Navegaciones**](#navegaciones)
+    - [**Caso: `entity === 'Models.Personalization'`**](#caso-entity--modelspersonalization)
+    - [**Caso: `entity.startsWith('Models.')`**](#caso-entitystartswithmodels)
+    - [**Caso: Otros (entidades que no comienzan con `Models.`)**](#caso-otros-entidades-que-no-comienzan-con-models)
+    - [**Caso: Creación de una nueva entidad (sin `entityId`)**](#caso-creación-de-una-nueva-entidad-sin-entityid)
+  - [**Diagrama**](#diagrama)
+
+
 ## **Propósito**
 
 El hook `useOnSaveEntity` se encarga de gestionar la lógica para guardar o actualizar una entidad en la aplicación. Procesa los valores del formulario, valida los atributos, construye consultas GraphQL y realiza llamadas a la API para guardar o actualizar la entidad en el backend. También maneja la navegación y actualizaciones de estado según el resultado de las operaciones.

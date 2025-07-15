@@ -4,6 +4,15 @@ sidebar_position: 1
 
 # Carga de datos de una entidad (`useLoadEntityState`)
 
+- [Carga de datos de una entidad (`useLoadEntityState`)](#carga-de-datos-de-una-entidad-useloadentitystate)
+  - [Introducción](#introducción)
+  - [Flujo de llamadas al back-end](#flujo-de-llamadas-al-back-end)
+  - [Transformaciones en el cliente](#transformaciones-en-el-cliente)
+  - [Almacenamiento de resultados](#almacenamiento-de-resultados)
+  - [Diagrama de flujo](#diagrama-de-flujo)
+  - [Conclusiones](#conclusiones)
+
+
 ## Introducción
 Este documento describe de forma resumida cómo el front-end carga la información necesaria para mostrar y editar una entidad utilizando el _hook_ `useLoadEntityState`. Se detallan las llamadas al back-end, las transformaciones en el cliente y dónde se almacenan los datos resultantes.
 

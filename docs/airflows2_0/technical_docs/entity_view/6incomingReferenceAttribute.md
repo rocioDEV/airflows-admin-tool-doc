@@ -4,6 +4,26 @@ sidebar_position: 6
 
 # incomingReferenceAttribute
 
+- [incomingReferenceAttribute](#incomingreferenceattribute)
+  - [Descripción general](#descripción-general)
+  - [Definición de tipo](#definición-de-tipo)
+  - [Propósito](#propósito)
+  - [Uso](#uso)
+    - [En la definición de atributo](#en-la-definición-de-atributo)
+    - [En el renderizado de EntityView](#en-el-renderizado-de-entityview)
+    - [Ejemplo de implementación](#ejemplo-de-implementación)
+  - [Funciones relacionadas](#funciones-relacionadas)
+    - [isInverseReference()](#isinversereference)
+    - [Uso en valores de formulario](#uso-en-valores-de-formulario)
+  - [Esquema de base de datos](#esquema-de-base-de-datos)
+  - [Patrones comunes](#patrones-comunes)
+    - [1. Relaciones padre-hijo](#1-relaciones-padre-hijo)
+    - [2. Relaciones uno-a-muchos](#2-relaciones-uno-a-muchos)
+  - [Restricciones](#restricciones)
+  - [Comportamiento de la UI](#comportamiento-de-la-ui)
+  - [Manejo de errores](#manejo-de-errores)
+
+
 ## Descripción general
 
 El `incomingReferenceAttribute` es un atributo de campo utilizado en el componente EntityView para manejar relaciones inversas entre entidades. Define el nombre de un atributo en la entidad referenciada que apunta de vuelta a la entidad actual, creando una relación bidireccional.

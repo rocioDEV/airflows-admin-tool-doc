@@ -1,11 +1,11 @@
 # 🌠 Propuestas de mejora
 
 - [🌠 Propuestas de mejora](#-propuestas-de-mejora)
-    - [PARA IMPLEMENTAR:](#para-implementar)
-    - [PARA DISCUTIR:](#para-discutir)
+    - [PARA IMPLEMENTAR](#para-implementar)
+    - [PARA DISCUTIR](#para-discutir)
 
 
-### PARA IMPLEMENTAR:
+### PARA IMPLEMENTAR
 -  ~~Propuesta nuevo menú con dos niveles~~:
 <iframe src="https://codesandbox.io/embed/2qjrtn?view=preview&hidenavigation=1"
      style={{ width:"100%", height: "500px", border:0, borderRadius: "4px", overflow:"hidden" }}
@@ -24,8 +24,17 @@
 - ~~Si se ha discontinuado la parte de **"Informes"**, tiene sentido quitarla?~~
 - En configuración de un campo, "**Types of accepted files**" debería haber alguna pista o validación del formato que esperamos (example: .zip)
 - Marcar visualmente los elementos del menú nuevos (entidades que se acaban de crear)
+- ~~El selector de color se puede esconder hasta que se haga click (mostrando un cuadrado pintado y el hexadecimal en modo visualización)~~
+- ~~Navegación por breadcrumbs~~
+- Prerellenar el formulario de grupos/pestañas y mantener los datos al volver al formulario de creación /edición de campo
+- No se pueden añadir campos a una entidad en modo editar
+- Cuando una entidad no tiene seleccionado campo para identificar el formu, el breadcrumb muestra el nombre vacío. Mostrar  "Sin etiqueta" con un tootip que indique que hay que marcar un campo como identificador del formulario para que aparezca algún valor
+- El menú lateral debe desparecer cuando hay una sola opción
+- El menú lateral debe aparecer plegado por defecto cuando hay pocas opciones y desplegado en caso contrario (>5)
+
 _____________
-### PARA DISCUTIR:
+### PARA DISCUTIR
 - Una vez que se establece una relación, habría que **limpiar las opciones que se pueden aplicar** ("aparece en el formulario" hace que el campo aparezca dos veces)
 - Debería **unificarse** en código Formularios - Forms //  Campos - fields? *(Domain Driven Design*)
 - Al crear aplicación, tiene sentido que **"Nombre aplicación"** sea un campo de texto libre?
+- Cambiar validación de campos para que sea un poco más obvia

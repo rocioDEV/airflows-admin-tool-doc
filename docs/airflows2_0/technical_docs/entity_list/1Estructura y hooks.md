@@ -4,6 +4,13 @@ sidebar_position: 1
 
 # Estructura y hooks
 
+- [Estructura y hooks](#estructura-y-hooks)
+  - [Introducción](#introducción)
+  - [Árbol de componentes](#árbol-de-componentes)
+  - [Hooks críticos](#hooks-críticos)
+  - [Interacciones clave](#interacciones-clave)
+
+
 ## Introducción
 Este documento describe de forma resumida la estructura y los hooks del componente EntityList (un grid de datos complejos utilizado para listar los datos de cualquier tipo de entidad).
 

@@ -4,6 +4,20 @@ sidebar_position: 5
 
 # Tipos de atributo: acción
 
+- [Tipos de atributo: acción](#tipos-de-atributo-acción)
+  - [Descripción general](#descripción-general)
+  - [Detalles del campo](#detalles-del-campo)
+    - [**Nombre del campo:** `action`](#nombre-del-campo-action)
+    - [**Tipo:** Booleano](#tipo-booleano)
+    - [**Propósito:**](#propósito)
+  - [Referencias de código](#referencias-de-código)
+    - [**Renderización de botones de acción**](#renderización-de-botones-de-acción)
+    - [**Manejo de clics de acción**](#manejo-de-clics-de-acción)
+    - [**Visibilidad en la interfaz de usuario**](#visibilidad-en-la-interfaz-de-usuario)
+  - [Campos relacionados](#campos-relacionados)
+  - [Ejemplo](#ejemplo)
+
+
 ## Descripción general
 
 El campo `action` es una propiedad booleana de un campo de entidad que determina si el atributo está asociado con un comportamiento accionable. Cuando se establece en `true`, el atributo se trata como una acción que puede activar funcionalidades específicas, como abrir una URL, ejecutar un comando u otras operaciones. Es decir, permite renderizar un botón en lugar de un campo para introducir valores, para facilitar que el usuario pueda introducir una acción personalizada dentro del formulario o el listado.

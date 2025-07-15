@@ -4,6 +4,40 @@ sidebar_position: 1
 
 # Análisis dependencias
 
+- [Análisis dependencias](#análisis-dependencias)
+    - [1. Riesgos de seguridad](#1-riesgos-de-seguridad)
+    - [2. Problemas de mantenimiento](#2-problemas-de-mantenimiento)
+    - [3. Compatibilidad y nuevas funcionalidades](#3-compatibilidad-y-nuevas-funcionalidades)
+  - [Ejemplo concreto de vulnerabilidad: `jsonwebtoken@8.5.1`](#ejemplo-concreto-de-vulnerabilidad-jsonwebtoken851)
+  - [Evaluación de la dificultad de migración de librerías](#evaluación-de-la-dificultad-de-migración-de-librerías)
+      - [signature\_pad (\*)](#signature_pad-)
+      - [mrz (\*)](#mrz-)
+      - [jsonwebtoken (\*\*)](#jsonwebtoken-)
+      - [react-doc-viewer (\*\*)](#react-doc-viewer-)
+      - [react-number-format (\*\*)](#react-number-format-)
+      - [@zxing/library (\*\*)](#zxinglibrary-)
+      - [@emotion/core (\*\*)](#emotioncore-)
+      - [@emotion/styled (\*\*)](#emotionstyled-)
+      - [react-reader (\*\*)](#react-reader-)
+      - [react-select (\*\*\*)](#react-select-)
+      - [@date-io/date-fns (\*\*\*)](#date-iodate-fns-)
+      - [@mui/icons-material (anteriormente @material-ui/icons) (\*\*\*)](#muiicons-material-anteriormente-material-uiicons-)
+      - [react-dropzone (\*\*\*)](#react-dropzone-)
+      - [react-i18next (\*\*\*)](#react-i18next-)
+      - [react-leaflet (\*\*\*)](#react-leaflet-)
+      - [react-router-dom (\*\*\*)](#react-router-dom-)
+      - [@mui/lab (anteriormente @material-ui/lab) (\*\*\*)](#muilab-anteriormente-material-uilab-)
+      - [cypress (\*\*\*\*)](#cypress-)
+      - [@mui/material (anteriormente @material-ui/core) (\*\*\*\*)](#muimaterial-anteriormente-material-uicore-)
+      - [blockly (\*\*\*\*)](#blockly-)
+      - [bpmn-js (\*\*\*\*)](#bpmn-js-)
+      - [date-fns (\*\*\*\*)](#date-fns-)
+      - [i18next (\*\*\*\*)](#i18next-)
+      - [react (\*\*\*\*)](#react-)
+      - [react-dom (\*\*\*\*)](#react-dom-)
+      - [react-scripts (\*\*\*\*)](#react-scripts-)
+
+
 ![Dependencies Diagram](./img/dependencies.png)
 
 - Muchas dependencias están **2, 3 o más versiones major por detrás** (ej: `react`, `react-dom`, `material-ui`, `cypress`, `date-fns`, `i18next`, etc.).

@@ -4,6 +4,18 @@ sidebar_position: 3
 
 # Tipos de atributos
 
+- [Tipos de atributos](#tipos-de-atributos)
+  - [Índice](#índice)
+  - [1. Visión general del flujo de datos](#1-visión-general-del-flujo-de-datos)
+  - [2. Paso 1 – `mapAttributes.ts`](#2-paso-1--mapattributests)
+  - [3. Paso 2 – `getUiType.ts`](#3-paso-2--getuitypets)
+    - [Notas de diseño](#notas-de-diseño)
+  - [4. Paso 3 – `useLoadEntityState.ts`](#4-paso-3--useloadentitystatets)
+  - [5. Paso 4 – `getFieldRendererEntry.tsx`](#5-paso-4--getfieldrendererentrytsx)
+  - [6. Tabla resumen `uiType → FieldRenderer`](#6-tabla-resumen-uitype--fieldrenderer)
+  - [7. Puntos de extensión y buenas prácticas](#7-puntos-de-extensión-y-buenas-prácticas)
+
+
 Cálculo del tipo de campo (`uiType`) que corresponde a cada atributo de una entidad y renderizado de los distintos tipos de campos en el *EntityView*.
 
 ## Índice

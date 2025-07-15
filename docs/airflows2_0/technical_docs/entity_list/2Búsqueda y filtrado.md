@@ -3,6 +3,15 @@ sidebar_position: 1
 ---
 # Flujo de estado y datos 
 
+- [Flujo de estado y datos](#flujo-de-estado-y-datos)
+    - [Pasos](#pasos)
+- [Mecanismo de filtrado](#mecanismo-de-filtrado)
+  - [Componentes principales](#componentes-principales)
+  - [Workflow detallado](#workflow-detallado)
+  - [Reglas de construcción (`buildWhere`)](#reglas-de-construcción-buildwhere)
+  - [Toggle “filtrar cuando está vacío”](#toggle-filtrar-cuando-está-vacío)
+
+
 A continuación se describe cómo fluyen los eventos y la información desde que el usuario interactúa con `EntityList` hasta que se renderiza la nueva UI. El diagrama se centra en el ciclo *interacción → hook → red → renderizado*.
 
 ```mermaid

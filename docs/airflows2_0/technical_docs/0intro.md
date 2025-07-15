@@ -4,6 +4,18 @@ sidebar_position: 0
 
 # Introducción general de la arquitectura del front-end
 
+- [Introducción general de la arquitectura del front-end](#introducción-general-de-la-arquitectura-del-front-end)
+  - [Fuentes de datos principales](#fuentes-de-datos-principales)
+    - [1. `localModel` (modelo local)](#1-localmodel-modelo-local)
+    - [2. api GraphQL](#2-api-graphql)
+  - [Autenticación y ciclo de sesión](#autenticación-y-ciclo-de-sesión)
+  - [Componentes y dominios principales](#componentes-y-dominios-principales)
+  - [Gestión global de estado y mensajería](#gestión-global-de-estado-y-mensajería)
+  - [Sistema de diseño y temas personalizables](#sistema-de-diseño-y-temas-personalizables)
+  - [Internacionalización](#internacionalización)
+  - [Testing](#testing)
+
+
 Este documento sirve como punto de partida para el resto de la documentación técnica del proyecto. Resume dónde obtiene la aplicación sus datos, cómo se gestiona la autenticación y qué módulos de React constituyen los pilares de la interfaz.
 
 ## Fuentes de datos principales

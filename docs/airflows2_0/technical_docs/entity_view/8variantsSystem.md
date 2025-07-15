@@ -4,6 +4,46 @@ sidebar_position: 8
 
 # Sistema de variantes
 
+- [Sistema de variantes](#sistema-de-variantes)
+  - [Descripción general](#descripción-general)
+  - [Conceptos principales](#conceptos-principales)
+    - [Variantes](#variantes)
+    - [Selectores de variantes](#selectores-de-variantes)
+    - [Dependencias de variantes](#dependencias-de-variantes)
+  - [Definiciones de tipos](#definiciones-de-tipos)
+  - [Cómo funciona el sistema de variantes](#cómo-funciona-el-sistema-de-variantes)
+    - [1. Selección de variantes](#1-selección-de-variantes)
+    - [2. Verificación de variantes](#2-verificación-de-variantes)
+    - [3. Determinación de visibilidad de campos](#3-determinación-de-visibilidad-de-campos)
+  - [Campos selectores de variantes](#campos-selectores-de-variantes)
+    - [Campos enum como selectores de variantes](#campos-enum-como-selectores-de-variantes)
+  - [Integración con otros sistemas](#integración-con-otros-sistemas)
+    - [1. Visibilidad de pestañas](#1-visibilidad-de-pestañas)
+    - [2. Visibilidad de grupos](#2-visibilidad-de-grupos)
+    - [3. Reserva de espacio](#3-reserva-de-espacio)
+  - [Patrones de uso](#patrones-de-uso)
+    - [1. Dependencia simple de variantes](#1-dependencia-simple-de-variantes)
+    - [2. Dependencias múltiples de variantes](#2-dependencias-múltiples-de-variantes)
+    - [3. Campo selector de variantes](#3-campo-selector-de-variantes)
+    - [4. Cadena de dependencias compleja](#4-cadena-de-dependencias-compleja)
+  - [Gestión de estado](#gestión-de-estado)
+    - [Estructura de EntityState](#estructura-de-entitystate)
+    - [Proveedor de contexto](#proveedor-de-contexto)
+  - [Consideraciones de rendimiento](#consideraciones-de-rendimiento)
+    - [1. Re-renderizado](#1-re-renderizado)
+    - [2. Actualizaciones de estado](#2-actualizaciones-de-estado)
+    - [3. Operaciones de filtrado](#3-operaciones-de-filtrado)
+  - [Manejo de errores](#manejo-de-errores)
+    - [1. Variantes faltantes](#1-variantes-faltantes)
+    - [2. Conversión de tipos](#2-conversión-de-tipos)
+    - [3. Consistencia de estado](#3-consistencia-de-estado)
+  - [Mejores prácticas](#mejores-prácticas)
+    - [1. Nomenclatura de variantes](#1-nomenclatura-de-variantes)
+    - [2. Gestión de dependencias](#2-gestión-de-dependencias)
+    - [3. Optimización de rendimiento](#3-optimización-de-rendimiento)
+    - [4. Experiencia de usuario](#4-experiencia-de-usuario)
+
+
 ## Descripción general
 
 El sistema de variantes es un mecanismo sofisticado que controla la visibilidad y el comportamiento de los campos basándose en las selecciones de variantes. Permite el renderizado dinámico de formularios donde ciertos campos, pestañas y grupos solo son visibles cuando se seleccionan valores específicos de variantes. Este sistema es particularmente útil para crear formularios configurables que se adaptan a diferentes escenarios de negocio o configuraciones de productos.

@@ -4,6 +4,7 @@ sidebar_position: 1
 
 # `localModel`
 
+
 El model de Airflows(Entidades, Usuarios, Funciones, Paquetes web...) está almacenado de forma estática (un archivo JSON) y se empaqueta junto con el resto del frontal.
 
 1. Entidades principales del negocio:
