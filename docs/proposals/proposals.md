@@ -1,10 +1,11 @@
 # 🌠 Propuestas de mejora
 
 - [🌠 Propuestas de mejora](#-propuestas-de-mejora)
+    - [IMPLEMENTADAS](#implementadas)
     - [PARA IMPLEMENTAR](#para-implementar)
     - [PARA DISCUTIR](#para-discutir)
 
-### PARA IMPLEMENTAR
+### IMPLEMENTADAS
 -  ~~Propuesta nuevo menú con dos niveles~~:
 <iframe src="https://codesandbox.io/embed/2qjrtn?view=preview&hidenavigation=1"
      style={{ width:"100%", height: "500px", border:0, borderRadius: "4px", overflow:"hidden" }}
@@ -19,17 +20,18 @@
 - ~~El selector de color se puede esconder hasta que se haga click (mostrando un cuadrado pintado y el hexadecimal en modo visualización)~~
 - ~~Navegación por breadcrumbs~~
 - ~~Cuando una entidad no tiene seleccionado campo para identificar el formu, el breadcrumb muestra el nombre vacío. Mostrar  "Sin etiqueta" con un tootip que indique que hay que marcar un campo como identificador del formulario para que aparezca algún valor~~
+- ~~El menú lateral debe desparecer cuando hay una sola opción~~
+- ~~El menú lateral debe aparecer plegado por defecto cuando hay pocas opciones y desplegado en caso contrario (>5)~~
 
-- Prerellenar el formulario de grupos/pestañas y mantener los datos al volver al formulario de creación /edición de campo
+### PARA IMPLEMENTAR
 - No se pueden añadir campos a una entidad en modo editar
-- El menú lateral debe desparecer cuando hay una sola opción
-- El menú lateral debe aparecer plegado por defecto cuando hay pocas opciones y desplegado en caso contrario (>5)
+- Prerellenar el formulario de grupos/pestañas y mantener los datos al volver al formulario de creación /edición de campo
+- - Cuando una **configuración de campo no está soportada** (texto, marco casilla de icono pero no añado lista de valores), presentar informe de errores en el formulario en vez de pintar el literal `NOT_SUPPORTED`
+- Marcar visualmente los elementos del menú nuevos (entidades que se acaban de crear)
 - En configuración de un campo, "**Types of accepted files**" debería haber alguna pista o validación del formato que esperamos (example: .zip)
 - Al filtrar los resultados de una tabla, debería corregirse el **orden de los campos de búsqueda** (no se respeta el del formulario)
-- Cuando una **configuración de campo no está soportada** (texto, marco casilla de icono pero no añado lista de valores), presentar informe de errores en el formulario en vez de pintar el literal `NOT_SUPPORTED`
 - En modo anonimo, debería aparecer el literal "Salir" en vez de "Cerrar sesión"
 - El **ancho del menú** podría ser configurable y debería aparercer tooltip en las opciones de menú con título muy largo 
-- Marcar visualmente los elementos del menú nuevos (entidades que se acaban de crear)
 
 _____________
 ### PARA DISCUTIR
