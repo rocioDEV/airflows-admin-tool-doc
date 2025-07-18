@@ -2,11 +2,12 @@
 sidebar_position: 2
 ---
 
-# Análisis páginas
+# Análisis inicial
 
-- [Análisis páginas](#análisis-páginas)
+- [Análisis inicial](#análisis-inicial)
   - [Probar en local](#probar-en-local)
-  - [Tipos de páginas](#tipos-de-páginas)
+  - [Tecnologías](#tecnologías)
+  - [Páginas](#páginas)
     - [Tablas](#tablas)
     - [Vistas tipo diagrama](#vistas-tipo-diagrama)
     - [Vistas formulario / wizard](#vistas-formulario--wizard)
@@ -28,9 +29,15 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 
 
 ---
+## Tecnologías 
+- Framework: Next.js app-router, React 18, TypeScript, Tailwind + shadcn/Radix primitives for UI.
+- React-Flow-driven para editar los workflows (components/workflow/*).
+- Data layer: wrappers pequeñitos que hacen llamadas fetch.
+- Styling: Todo está con Tailwind, nada de Material.
+- Build: PostCSS, Tailwind, ts-config tuned for Next.
 
 
-## Tipos de páginas 
+## Páginas 
 ### Tablas
 
 | página & componente raíz | categoría | dependencias |
