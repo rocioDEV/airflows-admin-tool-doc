@@ -1,0 +1,8 @@
+{
+	"label": "admin-tool migration",
+	"position": 2,
+	"link": {
+		"type": "generated-index",
+		"description": "Migración del core del frontal de administración de Airflows"
+	}
+}

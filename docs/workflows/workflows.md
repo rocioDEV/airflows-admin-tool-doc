@@ -1,4 +1,18 @@
-# airflows-workflows
+---
+sidebar_position: 2
+---
+
+# Análisis páginas
+
+- [Análisis páginas](#análisis-páginas)
+  - [Probar en local](#probar-en-local)
+  - [Tipos de páginas](#tipos-de-páginas)
+    - [Tablas](#tablas)
+    - [Vistas tipo diagrama](#vistas-tipo-diagrama)
+    - [Vistas formulario / wizard](#vistas-formulario--wizard)
+
+
+## Probar en local
 
 PARA PROBAR EL REPO EN LOCAL:
 
@@ -12,13 +26,12 @@ http://localhost:3000/workflows?instance_url=https://qa.flows.ninja&token=eyJhbG
 
 Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 
-- [airflows-workflows](#airflows-workflows)
-    - [tablas](#tablas)
-    - [vistas tipo diagrama](#vistas-tipo-diagrama)
-  - [Estado por fichero](#estado-por-fichero)
+
+---
 
 
-### tablas
+## Tipos de páginas 
+### Tablas
 
 | página & componente raíz | categoría | dependencias |
 | --- | --- | --- |
@@ -35,7 +48,7 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 | | services | fetchProcessInstance · fetchProcessDetail |
 | | util | cookies |
 
-### vistas tipo diagrama
+### Vistas tipo diagrama
 
 | página & componente raíz | categoría | dependencias |
 | --- | --- | --- |
@@ -46,14 +59,14 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 | | ui | button |
 | | services | fetchProcessInstanceData · getProcessInstance |
 | | util | cookies · getLayoutedElements |
+
+### Vistas formulario / wizard
+
+| página & componente raíz | categoría | dependencias |
+| --- | --- | --- |
 | **lanzador de instancia**<br/>`app/instance/launch/page` → `variable-form` | molecules | data-table · variable-instance-columns |
 | | ui | button · card · form · input · modal · checkbox · datetimePicker |
 | | services | createFullProcessInstance · fetchProcessDetail · fechVariableData · createVariableData · deleteVariableData · updateVariableData |
 | | util | cookies · customDateFormater · toast |
 
 
-## Estado por fichero
-Enlace a Google Sheets:
-https://docs.google.com/spreadsheets/d/15a3JxfAiQGhou8i8j2Ue05oxsvTWN9uScZXONT_GdPI/edit?usp=sharing
-
-<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQPtZqnWdmOKzetrMcHrBp87F-JJnMBwT6opOD3mAK4gMp9Y7Y3Bpdh0XANFjRTnvvC83aAw3TyLK8b/pubhtml?gid=854645049&amp;single=true&amp;widget=true&amp;headers=false"  height="620px" width="100%"></iframe>

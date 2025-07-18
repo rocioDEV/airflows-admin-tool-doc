@@ -1,0 +1,8 @@
+{
+	"label": "workflows migration",
+	"position": 3,
+	"link": {
+		"type": "generated-index",
+		"description": "Migración del frontal de administración de workflows"
+	}
+}
