@@ -59,10 +59,10 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 
 | página & componente raíz | categoría | dependencias |
 | --- | --- | --- |
-| **vista de un proceso**<br/>`app/process/page` → `workflow-chart` | molecules | xyflow · activity-node · and-node · end-node |
+| **vista de un workflow (proceso)**<br/>`app/process/page` → `workflow-chart` | molecules | xyflow · activity-node · and-node · end-node |
 | | services | fetchData · updateProcessDetail |
 | | util | cookies · generateUniqueId · toast |
-| **vista de una instancia de un proceso**<br/>`app/instance/detail/page` → `detail-process-instance-chart` | molecules | xyflow · activity-node · and-node · or-node · xor-node · function-node · ia-agent-node · end-node · start-node · custom-readonly-edge |
+| **vista de una instancia de un workflow (proceso)**<br/>`app/instance/detail/page` → `detail-process-instance-chart` | molecules | xyflow · activity-node · and-node · or-node · xor-node · function-node · ia-agent-node · end-node · start-node · custom-readonly-edge |
 | | ui | button |
 | | services | fetchProcessInstanceData · getProcessInstance |
 | | util | cookies · getLayoutedElements |
