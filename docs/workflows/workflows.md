@@ -42,7 +42,7 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 
 | página & componente raíz | categoría | dependencias |
 | --- | --- | --- |
-| **dashboard de workflows**<br/>`app/page` → `process-chart` | molecules | process-form · page-container · data-table · process-columns |
+| **lista de workflows**<br/>`app/page` → `process-chart` | molecules | process-form · page-container · data-table · process-columns |
 | | ui | button · separator · dialog |
 | | services | createProcess · fetchProcessListWithoutLimit |
 | | util | cookies |
