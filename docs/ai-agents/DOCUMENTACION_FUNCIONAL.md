@@ -1,42 +1,22 @@
-# Documentación Funcional
+# Documentación funcional
 
-## Descripción General de la Aplicación
+## Descripción general de la aplicación
 
 **Agentes AI de Airflows** es una aplicación de IA conversacional que proporciona una interfaz de chat para interactuar con varios modelos y agentes de IA. La aplicación admite múltiples proveedores de IA (OpenAI, Google, Ollama) y permite a los usuarios tener conversaciones con agentes de IA que pueden ejecutar herramientas y funciones.
 
-## Interfaz de Inicio
+## Interfaz de inicio
 
-### Pantalla de Bienvenida
-- **Punto de Entrada:** Ruta `/assistant`
-- **Estado Inicial:** Interfaz de chat vacía con diálogo de bienvenida
-- **Integración del Usuario:** 
+### Pantalla de bienvenida
+- **Punto de entrada:** Ruta `/assistant`
+- **Estado inicial:** Interfaz de chat vacía con diálogo de bienvenida
+- **Integración del usuario:** 
   - Aparece un diálogo de solicitud de nombre de usuario para nuevos usuarios
   - Nombre de usuario predeterminado: "Anonymous" si el usuario omite
   - Experiencia personalizada basada en el nombre ingresado
 
-### Diseño de la Interfaz Principal
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Barra Superior del Chat                 │
-│  [Menú] [Selector de Agente AI] [Configuración]           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│                    Área de Chat                             │
-│  • Mensaje de bienvenida con logo                          │
-│  • Mensajes de chat (usuario/IA)                           │
-│  • Bloques de código con resaltado de sintaxis             │
-│  • Gráficos dinámicos y visualizaciones                   │
-│  • Adjuntos de imágenes                                    │
-│                                                             │
-├─────────────────────────────────────────────────────────────┤
-│                    Área de Entrada                          │
-│  [Entrada de Texto] [Adjuntar] [Voz] [Enviar]             │
-└─────────────────────────────────────────────────────────────┘
-```
+## Flujos de usuario y recorridos
 
-## Flujos de Usuario y Recorridos
-
-### 1. Flujo de Integración de Nuevo Usuario
+### 1. Flujo de integración de nuevo usuario
 ```
 1. Usuario visita /assistant
 2. Aparece diálogo de bienvenida
@@ -45,7 +25,7 @@
 5. Usuario puede comenzar conversación
 ```
 
-### 2. Flujo de Conversación de Chat
+### 2. Flujo de conversación de chat
 ```
 1. Usuario selecciona Agente AI desde el menú desplegable
 2. Usuario escribe mensaje en campo de entrada
@@ -56,7 +36,7 @@
 7. Usuario puede continuar conversación
 ```
 
-### 3. Flujo de Gestión de Modelos
+### 3. Flujo de gestión de modelos
 ```
 1. Usuario hace clic en "Pull Model" en configuración
 2. Aparece diálogo de entrada de nombre de modelo
@@ -66,7 +46,7 @@
 6. Modelo disponible para selección en menú de agentes
 ```
 
-### 4. Flujo de Gestión de Historial de Chat
+### 4. Flujo de gestión de historial de chat
 ```
 1. Usuario hace clic en botón "New Chat"
 2. Nueva sesión de chat creada con ID único
@@ -76,7 +56,7 @@
 6. Historial de chat persistido en IndexedDB
 ```
 
-### 5. Flujo de Gestión de Configuración
+### 5. Flujo de gestión de configuración
 ```
 1. Usuario hace clic en icono de configuración
 2. Aparece menú desplegable de configuración
@@ -86,9 +66,9 @@
 6. Configuración guardada en almacenamiento local
 ```
 
-## Dominios y Secciones
+## Dominios y secciones
 
-### 1. Autenticación y Gestión de Usuarios
+### 1. Autenticación y gestión de usuarios
 **Propósito:** Manejar identidad y preferencias del usuario
 **Componentes:**
 - `UsernameForm` - Entrada y validación de nombre de usuario
@@ -96,13 +76,13 @@
 - `UserSettings` - Gestión de configuración de usuario
 - `useChatStore` - Gestión de estado del usuario
 
-**Lógica de Negocio:**
+**Lógica de negocio:**
 - Validación y persistencia de nombre de usuario
 - Manejo de usuarios anónimos
 - Almacenamiento de preferencias de usuario
 - Gestión de sesiones
 
-### 2. Interfaz de Chat
+### 2. Interfaz de chat
 **Propósito:** Interfaz principal de conversación
 **Componentes:**
 - `Chat` - Componente principal de chat
@@ -111,67 +91,67 @@
 - `ChatBottombar` - Área de entrada
 - `ChatTopbar` - Selección de agente y controles
 
-**Lógica de Negocio:**
+**Lógica de negocio:**
 - Transmisión y visualización de mensajes
 - Manejo de conversaciones en tiempo real
 - Gestión de historial de mensajes
 - Validación y procesamiento de entrada
 
-### 3. Gestión de Agentes AI
+### 3. Gestión de agentes AI
 **Propósito:** Manejar selección y configuración de modelos de IA
 **Componentes:**
 - Selector de agente desplegable
 - Interfaz de descarga de modelos
 - Gestión de contexto de agente
 
-**Lógica de Negocio:**
+**Lógica de negocio:**
 - Recuperación de metadatos de agente desde GraphQL
 - Selección de proveedor de modelo (OpenAI, Google, Ollama)
 - Configuración de herramientas y contexto
 - Descarga y gestión de modelos
 
-### 4. Sistema de Ejecución de Herramientas
+### 4. Sistema de ejecución de herramientas
 **Propósito:** Ejecutar herramientas y funciones de agentes AI
 **Componentes:**
 - Construcción dinámica de herramientas
 - Manejo de parámetros de función
 - API de ejecución de herramientas
 
-**Lógica de Negocio:**
+**Lógica de negocio:**
 - Generación de esquema de herramientas desde GraphQL
 - Validación de parámetros usando Zod
 - Ejecución de funciones vía solicitudes HTTP
 - Manejo de errores y procesamiento de respuestas
 
-### 5. Persistencia de Datos
+### 5. Persistencia de datos
 **Propósito:** Almacenar historial de chat y datos de usuario
 **Componentes:**
 - Almacenamiento IndexedDB
 - Gestión de estado Zustand
 - Almacenamiento local para preferencias
 
-**Lógica de Negocio:**
+**Lógica de negocio:**
 - Persistencia de sesiones de chat
 - Almacenamiento de historial de mensajes
 - Caché de preferencias de usuario
 - Sincronización de datos
 
-### 6. Manejo de Medios
+### 6. Manejo de medios
 **Propósito:** Manejar adjuntos de imágenes y contenido visual
 **Componentes:**
 - `ImageEmbedder` - Interfaz de carga de imágenes
 - `CodeDisplayBlock` - Resaltado de sintaxis de código
 - `DynamicChart` - Renderizado de gráficos
 
-**Lógica de Negocio:**
+**Lógica de negocio:**
 - Procesamiento de imágenes Base64
 - Adjunto de imágenes a mensajes
 - Formateo de bloques de código
 - Visualización de datos de gráficos
 
-## Lógica de Negocio
+## Lógica de negocio
 
-### 1. Procesamiento de Agentes AI
+### 1. Procesamiento de agentes AI
 ```typescript
 // Selección y configuración de agente
 const agent = await fetchAgentFromGraphQL(selectedModel);
@@ -180,7 +160,7 @@ const model = createModelProvider(agent.provider, apiKey);
 const context = buildSystemPrompt(agent.contexts);
 ```
 
-### 2. Pipeline de Procesamiento de Mensajes
+### 2. Pipeline de procesamiento de mensajes
 ```typescript
 // Flujo de mensajes
 1. Validación de entrada del usuario
@@ -192,7 +172,7 @@ const context = buildSystemPrompt(agent.contexts);
 7. Actualización de UI
 ```
 
-### 3. Sistema de Ejecución de Herramientas
+### 3. Sistema de ejecución de herramientas
 ```typescript
 // Flujo de ejecución de herramientas
 1. Generación de esquema de herramientas desde GraphQL
@@ -203,7 +183,7 @@ const context = buildSystemPrompt(agent.contexts);
 6. Formateo de resultados
 ```
 
-### 4. Gestión de Estado
+### 4. Gestión de estado
 ```typescript
 // Persistencia de estado
 - Sesiones de chat en IndexedDB
@@ -212,7 +192,7 @@ const context = buildSystemPrompt(agent.contexts);
 - Claves API y tokens en contexto
 ```
 
-### 5. Manejo de Errores
+### 5. Manejo de errores
 ```typescript
 // Escenarios de error
 - Problemas de conectividad de red
@@ -222,27 +202,27 @@ const context = buildSystemPrompt(agent.contexts);
 - Errores de procesamiento de mensajes
 ```
 
-## Características Principales
+## Características principales
 
-### 1. Soporte Multi-Proveedor
+### 1. Soporte multi-proveedor
 - **OpenAI:** Modelos GPT vía API de OpenAI
 - **Google:** Modelos Gemini vía Google AI
 - **Ollama:** Modelos locales vía Ollama
 - **Personalizado:** Modelos compatibles con vLLM
 
-### 2. Integración de Herramientas
+### 2. Integración de herramientas
 - Carga dinámica de herramientas desde GraphQL
 - Validación y ejecución de parámetros
 - Capacidades de llamada de funciones
 - Manejo de errores y procesamiento de respuestas
 
-### 3. Comunicación en Tiempo Real
+### 3. Comunicación en tiempo real
 - Transmisión de respuestas
 - Actualizaciones de mensajes en vivo
 - Indicadores de progreso
 - Notificaciones de estado
 
-### 4. Soporte de Medios
+### 4. Soporte de medios
 - Adjuntos de imágenes
 - Resaltado de sintaxis de código
 - Visualizaciones de gráficos
@@ -254,31 +234,31 @@ const context = buildSystemPrompt(agent.contexts);
 - Gestión de sesiones
 - Capacidad offline
 
-## Arquitectura Técnica
+## Arquitectura técnica
 
-### Stack Frontend
+### Stack frontend
 - **Framework:** Next.js 14 con React 18
-- **Gestión de Estado:** Zustand con persistencia IndexedDB
+- **Gestión de estado:** Zustand con persistencia IndexedDB
 - **Componentes UI:** Radix UI con Tailwind CSS
 - **Formularios:** React Hook Form con validación Zod
 - **Gráficos:** Recharts para visualización de datos
 
-### Integración Backend
+### Integración backend
 - **Rutas API:** Rutas API de Next.js
 - **GraphQL:** Metadatos y configuración de agentes
 - **AI SDK:** SDK de IA de Vercel para integración de modelos
 - **Transmisión:** Eventos enviados por servidor para respuestas en tiempo real
 
-### Flujo de Datos
+### Flujo de datos
 ```
-Entrada de Usuario → Validación Frontend → Solicitud API → 
-Consulta GraphQL → Ejecución de Herramientas → Procesamiento AI → 
-Transmisión de Respuesta → Actualización Frontend → Persistencia de Estado
+Entrada de usuario → Validación frontend → Solicitud API → 
+Consulta GraphQL → Ejecución de herramientas → Procesamiento AI → 
+Transmisión de respuesta → Actualización frontend → Persistencia de estado
 ```
 
-## Consideraciones de Seguridad
+## Consideraciones de seguridad
 
-### 1. Gestión de Claves API
+### 1. Gestión de claves API
 - Claves API almacenadas en contexto de aplicación
 - Transmisión segura vía headers
 - Sin exposición del lado cliente
@@ -288,14 +268,14 @@ Transmisión de Respuesta → Actualización Frontend → Persistencia de Estado
 - Headers de autorización para solicitudes API
 - Gestión de sesiones
 
-### 3. Privacidad de Datos
+### 3. Privacidad de datos
 - Almacenamiento local para datos de usuario
 - Sin datos sensibles en URLs
 - Protocolos de comunicación seguros
 
-## Optimizaciones de Rendimiento
+## Optimizaciones de rendimiento
 
-### 1. Estrategia de Caché
+### 1. Estrategia de caché
 - IndexedDB para historial de chat
 - LocalStorage para preferencias
 - Caché en memoria para datos frecuentes
@@ -305,20 +285,20 @@ Transmisión de Respuesta → Actualización Frontend → Persistencia de Estado
 - Carga progresiva
 - División optimizada de bundles
 
-### 3. Gestión de Estado
+### 3. Gestión de estado
 - Actualizaciones eficientes de estado
 - Re-renderizado selectivo
 - Persistencia optimizada
 
-## Mejoras Futuras
+## Mejoras futuras
 
-### 1. Características Planificadas
+### 1. Características planificadas
 - Capacidades de entrada/salida de voz
 - Tipos avanzados de gráficos
 - Sesiones de chat colaborativas
 - Sistema de plugins para herramientas
 
-### 2. Mejoras de Escalabilidad
+### 2. Mejoras de escalabilidad
 - Conexiones WebSocket
 - Colaboración en tiempo real
 - Estrategias avanzadas de caché
