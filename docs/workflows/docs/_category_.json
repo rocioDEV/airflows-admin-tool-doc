@@ -1,0 +1,8 @@
+{
+	"label": "Documentación",
+	"position": 0,
+	"link": {
+		"type": "generated-index",
+		"description": "Documentación del frontend de workflows"
+	}
+}
