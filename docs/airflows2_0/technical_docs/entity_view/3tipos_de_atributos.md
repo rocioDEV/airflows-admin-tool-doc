@@ -69,26 +69,26 @@ Archivo: `src/components/entity-view/util/getUiType.ts`
 
 Algoritmo basado en reglas secuenciales y mutuamente excluyentes. Se evalúa de arriba abajo; la primera coincidencia detiene el proceso.
 
-| Nº | Condición (simplificada) | `uiType` generado |
-|----|--------------------------|-------------------|
+| Nº | Condición detallada | `uiType` generado |
+|----|---------------------|-------------------|
 | 1 | `localAttribute.type === 'SIGNATURE'` | `SIGNATURE` |
-| 2 | `localAttribute.type === 'DOCUMENT'` y **no** es array | `DOCUMENT` |
+| 2 | `localAttribute.type === 'DOCUMENT'` y `attribute.array === false` | `DOCUMENT` |
 | 3 | `localAttribute.type === 'BARCODE'` | `BARCODE` |
-| 4 | `localAttribute.action` \|\| `actionVisibleInForm` | `ACTION` |
-| 5 | Texto simple (ni array ni rico, sin password, sin color, sin icono) | `TEXT` |
-| 6 | Flag `password` activado | `TEXT_PASSWORD` |
-| 7 | Flag `color` activado | `COLOR` |
-| 8 | Flag `rich` activado | `RICH_TEXT` |
-| 9 | Enum + flag `icon` | `ICON` |
-| 10 | Enum sin icono | `ENUM` |
-| 11 | Tipo `BOOLEAN` | `BOOLEAN` |
-| 12 | Tipo numérico (`INT`, `DECIMAL`, etc.) | `NUMBER` |
-| 13 | Tipo `DATE` | `DATE` |
-| 14 | Tipo `TIMESTAMP[ _WITH_TIME_ZONE]` | `TIMESTAMP` |
-| 15 | Tipo `TIME[ _WITH_TIME_ZONE]` | `TIME` |
-| 16 | Array de texto | `TEXT_ARRAY` |
-| 17 | Tipo espacial `POINT` | `POINT` |
-| — | (ninguna coincide) | `NOT_SUPPORTED` |
+| 4 | `localAttribute.action` existe o `localAttribute.actionVisibleInForm` es verdadero | `ACTION` |
+| 5 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`) o `VECTOR`, no es array, sin flags especiales (`rich`, `password`, `color`, `icon`), sin `enumType` | `TEXT` |
+| 6 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`), no es array, flag `password` activado, sin `enumType` | `TEXT_PASSWORD` |
+| 7 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`), no es array, flag `color` activado | `COLOR` |
+| 8 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`), no es array, flag `rich` activado, sin `enumType` | `RICH_TEXT` |
+| 9 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`) con `enumType` definido y flag `icon` activado | `ICON` |
+| 10 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`) con `enumType` definido, sin flag `icon` | `ENUM` |
+| 11 | `attribute.type === 'BOOLEAN'` y no es array | `BOOLEAN` |
+| 12 | Tipo numérico (`INTEGER`, `SMALLINT`, `BIGINT`, `SERIAL`, `DECIMAL`, `DOUBLE_PRECISION`, `REAL`, `MONEY`, `SMALLSERIAL`, `BIGSERIAL`) y no es array | `NUMBER` |
+| 13 | `attribute.type === 'DATE'` y no es array | `DATE` |
+| 14 | `attribute.type === 'TIMESTAMP'` o `TIMESTAMP_WITH_TIME_ZONE` y no es array | `TIMESTAMP` |
+| 15 | `attribute.type === 'TIME'` o `TIME_WITH_TIME_ZONE` y no es array | `TIME` |
+| 16 | Tipo de texto (`TEXT`, `CHAR`, `VARCHAR`) que es array y sin `enumType` | `TEXT_ARRAY` |
+| 17 | `attribute.type === 'POINT'` y no es array | `POINT` |
+| — | Ninguna condición anterior coincide | `NOT_SUPPORTED` |
 
 ### Notas de diseño
 * Se usan flags auxiliares `isPassword`, `isColor`, `isIcon`, `isRich` para legibilidad.
