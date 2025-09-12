@@ -1,0 +1,77 @@
+# Desencadenadores personalizados de entidad (`EntityCustomTrigger`)
+
+## Propósito
+
+`EntityCustomTrigger` permite vincular funciones servidor — creadas en la tabla `Models.Function` — a una entidad de datos. El resultado es un “botón de acción” (en la pestaña **acciones**) que los usuarios, con los permisos correctos, pueden pulsar para ejecutar lógica de negocio en el backend sin modificar código Java.
+
+## Modelo de datos en la base de datos (PostgreSQL)
+
+| tabla | descripción |
+|-------|-------------|
+| `Models.EntityCustomTrigger` | definición del disparador: qué entidad lo contiene, nombre y función asociada |
+| `Models.EntityCustomTriggerLabel` | etiquetas traducibles (`locale`, `label`) |
+| `Models.CustomTriggerPermission` | roles autorizados a invocar cada disparador |
+
+restricciones y claves foráneas principales  
+```sql
+UNIQUE (container, name)                           -- nombre único por entidad
+FOREIGN KEY (container) REFERENCES Models.Entity   -- entidad propietaria
+FOREIGN KEY (function)  REFERENCES Models.Function -- función ejecutada
+ON DELETE CASCADE                                   -- borrado en cascada
+```
+
+## Metamodelo para la interfaz (admin-tool)
+
+Fragmento de `admin-tool/src/localModel.js`:
+
+```js
+"Models.EntityCustomTrigger": {
+  "attributes": {
+    "EntityViaContainer": { "order": 1, "label": true },
+    "name":   { "order": 2, "pattern": "[_A-Za-z][_0-9A-Za-z]*" },
+    "FunctionViaFunction": { "order": 6 },
+    "EntityCustomTriggerLabelListViaContainer": { "order": 10 }
+  }
+}
+```
+
+Implicaciones:
+
+* La creación y edición se realizan dentro de la pantalla de la entidad, pestaña **acciones**.  
+* La selección de `FunctionViaFunction` abre el catálogo de funciones definidas en `Models.Function`.  
+* Las etiquetas multilanguage se gestionan en `EntityCustomTriggerLabel`.
+
+## Flujo de ejecución en tiempo de ejecución
+
+1. El cliente React llama a la mutación GraphQL `executeCustomTrigger(triggerId, pkVals)`  
+2. El resolver genérico del servidor realiza:  
+   a. Verificación de permisos en `CustomTriggerPermission`  
+   b. Búsqueda de la columna `function` en `EntityCustomTrigger`  
+   c. Ejecución de la función; se inyectan variables de contexto (`$user`, `$row`, …)  
+   d. Retorno del resultado o error
+
+No existe código Java específico; todo se basa en metadatos.
+
+## Pasos para añadir un nuevo disparador
+
+1. Crear (o reutilizar) una entrada en `Models.Function` con la lógica deseada: Dentro Models > Modelado > Funciones, crear una función.
+2. Insertar en `Models.EntityCustomTrigger` (`container`, `name`, `function`): Dentro del formulario, en Acciones > Acciones personalizadas
+3. Insertar traducciones en `Models.EntityCustomTriggerLabel`.  
+4. Asignar permisos en `Models.CustomTriggerPermission` para cada rol.  
+
+Tras guardar, el disparador aparece inmediatamente en la pestaña **acciones** para los usuarios autorizados.
+
+## Buenas prácticas y advertencias
+
+* El nombre solo debe ser único dentro de su entidad; se aceptan duplicados en otras entidades.  
+* Asegúrate de que la firma de la función coincida con cómo la llama el executor (por defecto sin parámetros o con un `jsonb`).  
+* Si olvidas crear permisos, el botón no será visible para roles no administradores.
+
+## Resumen
+
+`EntityCustomTrigger` ofrece una forma declarativa de:
+
+* Exponer lógica de backend a los usuarios finales,  
+* Mantener la seguridad mediante `CustomTriggerPermission`,  
+* Y traducir la interfaz sin tocar el código fuente.
+

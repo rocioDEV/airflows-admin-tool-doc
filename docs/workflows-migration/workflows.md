@@ -53,7 +53,6 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 | **lista de instancias de un workflow**<br/>`app/instance/page` → `process-instance-chart` | molecules | page-container · data-table-instance · process-instance-columns |
 | | ui | button · separator |
 | | services | fetchProcessInstance · fetchProcessDetail |
-| | util | cookies |
 
 ### Vistas tipo diagrama
 
@@ -65,7 +64,6 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 | **vista de una instancia de un proceso**<br/>`app/instance/detail/page` → `detail-process-instance-chart` | molecules | xyflow · activity-node · and-node · or-node · xor-node · function-node · ia-agent-node · end-node · start-node · custom-readonly-edge |
 | | ui | button |
 | | services | fetchProcessInstanceData · getProcessInstance |
-| | util | cookies · getLayoutedElements |
 
 ### Vistas formulario / wizard
 
@@ -74,6 +72,6 @@ Lo primero que se carga es el dashboard de workflows (`app/page.tsx`)
 | **lanzador de instancia**<br/>`app/instance/launch/page` → `variable-form` | molecules | data-table · variable-instance-columns |
 | | ui | button · card · form · input · modal · checkbox · datetimePicker |
 | | services | createFullProcessInstance · fetchProcessDetail · fechVariableData · createVariableData · deleteVariableData · updateVariableData |
-| | util | cookies · customDateFormater · toast |
+| | util | customDateFormater · toast |
 
 
