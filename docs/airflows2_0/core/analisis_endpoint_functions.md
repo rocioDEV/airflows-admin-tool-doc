@@ -2,7 +2,7 @@
 
 ## Introducción
 
-El endpoint `/functions/` de Airflows es un sistema robusto que permite la ejecución programática de funciones almacenadas en base de datos. Este endpoint soporta tres tipos de lenguajes de programación diferentes y maneja la ejecución, el procesamiento de parámetros y la gestión de resultados de manera unificada.
+El endpoint `/functions/` de Airflows permite la ejecución programática de funciones almacenadas en base de datos. Este endpoint soporta tres tipos de lenguajes de programación diferentes y maneja la ejecución, el procesamiento de parámetros y la gestión de resultados de manera unificada.
 
 ## Arquitectura del endpoint
 
@@ -11,205 +11,72 @@ El endpoint `/functions/` de Airflows es un sistema robusto que permite la ejecu
 El endpoint está configurado en `com.niledb.platform/src/main/java/verticles/HttpVerticle.java` con las siguientes rutas:
 
 ```java
-// Líneas 231-233 en HttpVerticle.java
 router.get("/functions/:functionName").blockingHandler(FunctionsHandler::execute);
-router.post("/functions/:functionName").handler(BodyHandler.create())
-    .blockingHandler(FunctionsHandler::execute);
-router.options("/functions/:functionName").blockingHandler(routingContext -> {
-    // Configuración CORS
-});
+router.post("/functions/:functionName").handler(BodyHandler.create()).blockingHandler(FunctionsHandler::execute);
+router.options("/functions/:functionName").blockingHandler(routingContext -> { /* CORS */ });
 ```
 
 ### Componentes principales
 
-1. **FunctionsHandler**: Maneja las peticiones HTTP y coordina la ejecución
-2. **FunctionsHelper**: Gestiona la carga y configuración de funciones
-3. **FunctionExecutor**: Ejecuta funciones directamente sin overhead HTTP
-4. **CustomRepository**: Ejecuta funciones de base de datos
+1. **FunctionsHandler**: Maneja las peticiones HTTP, evalúa scripts JavaScript y ejecuta funciones de base de datos
+2. **FunctionsHelper**: Gestiona la carga de funciones y flags (HTTP, interceptores)
+3. **DatabaseHelper**: Gestiona conexiones a base de datos para funciones PL
 
 ## Lenguajes soportados
 
 ### 1. ECMAScriptNashorn (JavaScript)
 
 **Características:**
-- Motor de JavaScript Nashorn integrado en la JVM
+- Motor JavaScript de la JVM (ScriptEngine name: "JavaScript")
 - Acceso completo al contexto HTTP (request/response)
 - Ejecución directa en el servidor
-- **Nuevo**: Soporte para captura de valores de retorno
-- **Nuevo**: Dos modos de ejecución (return value y direct response)
+- No hay captura automática de valores de retorno; el script debe escribir la respuesta
 
 **Implementación:**
 ```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHelper.java (líneas 87-88)
-engine = new ScriptEngineManager().getEngineByName("nashorn");
+// helpers/FunctionsHelper.java
+public static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 
-// En com.niledb.platform/src/main/java/helpers/FunctionsHandler.java (líneas 55-58)
+// helpers/FunctionsHandler.java
 ScriptContext context = new SimpleScriptContext();
-context.setAttribute("routingContext", new SafeRoutingContext(routingContext), ScriptContext.ENGINE_SCOPE);
+context.setAttribute("routingContext", routingContext, ScriptContext.ENGINE_SCOPE);
 FunctionsHelper.engine.eval(FunctionsHelper.functions.get(functionName), context);
 ```
 
-#### Modos de ejecución JavaScript
+#### Ejecución JavaScript
 
-El sistema JavaScript ahora soporta dos modos de ejecución que se detectan automáticamente:
-
-##### 1. Modo Return Value (Nuevo)
-Cuando la función retorna un valor no nulo y no vacío:
+Actualmente las funciones JavaScript deben escribir y cerrar explícitamente la respuesta HTTP usando `routingContext.response()`. No hay captura automática de valores de retorno ni detección de modos.
 
 ```javascript
 function myFunction() {
     var request = routingContext.request();
-    var param = request.getParam("name");
-    
-    // Procesar el parámetro
-    var result = "Hello, " + param + "!";
-    
-    // Retornar el resultado (será capturado y formateado como JSON)
-    return result;
-}
-```
+    var name = request.getParam("name") || "world";
 
-**Respuesta HTTP:**
-```json
-[
-  {
-    "result": "Hello, John!"
-  }
-]
-```
-
-##### 2. Modo Direct Response (Legacy)
-Cuando la función escribe directamente a la respuesta HTTP:
-
-```javascript
-function myLegacyFunction() {
-    var request = routingContext.request();
-    var param = request.getParam("name");
-    
-    // Escribir directamente a la respuesta (comportamiento legacy)
     routingContext.response()
         .putHeader("Content-Type", "application/json")
-        .end(JSON.stringify({message: "Hello, " + param + "!"}));
+        .end(JSON.stringify({ message: "Hello, " + name + "!" }));
 }
 ```
 
-**Respuesta HTTP:**
-```json
-{"message": "Hello, John!"}
-```
+Para POST, el body JSON está disponible porque la ruta usa `BodyHandler`:
 
-#### Detección automática de modo
-
-El sistema detecta automáticamente qué modo usar basándose en si la función JavaScript retorna un valor:
-
-```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHelper.java (líneas 374-382)
-if (result != null && !result.toString().isEmpty()) {
-    // La función retornó un valor - usar modo return value
-    return new JavaScriptFunctionResult(result.toString(), ExecutionMode.RETURN_VALUE);
-} else {
-    // La función escribió directamente a la respuesta - usar modo direct response
-    return new JavaScriptFunctionResult("", ExecutionMode.DIRECT_RESPONSE);
-}
-```
-
-#### Análisis del problema "ok" response
-
-**Problema común:** Cuando una función JavaScript retorna `undefined` o no retorna nada, el sistema genera una respuesta "ok" por defecto.
-
-**Causa raíz:**
-1. La función retorna `undefined` (explícitamente o implícitamente)
-2. El sistema detecta que no hay valor de retorno válido
-3. Se activa el modo DIRECT_RESPONSE
-4. Como la función no escribió a la respuesta, se envía el valor por defecto "ok"
-
-**Ejemplo problemático:**
 ```javascript
-function execute(){
-    var foo = 2 + 1
-    return undefined  // Esto causa la respuesta "ok"
+function create() {
+    var body = routingContext.body().asJsonObject();
+    var value = body.getString("value");
+
+    routingContext.response()
+        .putHeader("Content-Type", "application/json")
+        .end(JSON.stringify({ created: value }));
 }
 ```
 
-**Soluciones:**
+Errores en el script deben manejarse dentro del propio script (por ejemplo, estableciendo `statusCode` y enviando un cuerpo de error). Si ocurre una excepción en la evaluación del script, el servidor finaliza la respuesta sin un JSON de error estructurado.
 
-1. **Retornar un valor significativo:**
-```javascript
-function execute(){
-    var foo = 2 + 1
-    return foo;  // Retornar el valor real en lugar de undefined
-}
-```
-
-2. **Escribir directamente a la respuesta:**
-```javascript
-function execute(){
-    var foo = 2 + 1
-    routingContext.response().end(JSON.stringify({result: foo}));
-}
-```
-
-3. **Retornar cualquier string no vacío:**
-```javascript
-function execute(){
-    var foo = 2 + 1
-    return "success";  // Cualquier string no vacío funcionará
-}
-```
-
-#### Componentes técnicos nuevos
-
-##### JavaScriptFunctionExecutor
-```java
-public class JavaScriptFunctionExecutor {
-    public static JavaScriptFunctionResult execute(String functionName, RoutingContext routingContext);
-    public static void formatResponse(JavaScriptFunctionResult result, HttpServerResponse response);
-}
-```
-
-##### Modos de ejecución
-```java
-public enum ExecutionMode {
-    RETURN_VALUE,    // La función retornó un valor
-    DIRECT_RESPONSE, // La función escribió directamente a la respuesta
-    ERROR           // La ejecución de la función falló
-}
-```
-
-#### Logs de debugging
-
-El sistema ahora incluye logs detallados para debugging:
-
-```
-JavaScript function MySchema.myFunction executed. Result: null, Type: null
-Using DIRECT_RESPONSE mode for function MySchema.myFunction
-Using DIRECT_RESPONSE mode - function already wrote to response
-Function didn't write to response, sending default 'ok' response
-```
 
 #### Guía de testing
 
-##### Test 1: Función que retorna un valor
-```javascript
-function myTestFunction() {
-    var request = routingContext.request();
-    var param = request.getParam("test");
-    
-    // Retornar un valor (esto debería ser capturado)
-    return "Hello, " + param + "!";
-}
-```
-
-**Respuesta esperada:**
-```json
-[
-  {
-    "result": "Hello, world!"
-  }
-]
-```
-
-##### Test 2: Función que escribe a la respuesta (legacy)
+##### Test 1: Función que escribe a la respuesta
 ```javascript
 function myLegacyFunction() {
     var request = routingContext.request();
@@ -227,63 +94,6 @@ function myLegacyFunction() {
 {"message": "Hello, world!"}
 ```
 
-##### Test 3: Función que no hace nada (causa respuesta "ok")
-```javascript
-function myBrokenFunction() {
-    var request = routingContext.request();
-    var param = request.getParam("test");
-    
-    // Esta función no hace nada - no retorna, no escribe a la respuesta
-    // Esto causará la respuesta "ok"
-}
-```
-
-**Respuesta esperada:**
-```
-ok
-```
-
-#### Problemas comunes y soluciones
-
-##### Problema 1: La función no retorna nada
-**Problema:** Tu función procesa datos pero no los retorna
-**Solución:** Agregar una declaración `return`
-```javascript
-function processData() {
-    var data = "processed";
-    // Faltante: return data;
-}
-```
-
-##### Problema 2: La función retorna undefined
-**Problema:** La función JavaScript retorna `undefined`
-**Solución:** Asegurarse de que la declaración return sea alcanzada
-```javascript
-function mightReturnUndefined() {
-    if (someCondition) {
-        return "value";
-    }
-    // Esto retorna undefined si la condición es falsa
-}
-```
-
-##### Problema 3: La función escribe a la respuesta pero también retorna
-**Problema:** La función hace ambas cosas, causando confusión
-**Solución:** Elegir un enfoque - o retornar un valor O escribir a la respuesta
-
-#### Mejores prácticas
-
-1. **Usar valores de retorno** para procesamiento simple de datos
-2. **Usar respuesta directa** para headers personalizados o respuestas complejas
-3. **No mezclar ambos enfoques** en la misma función
-4. **Siempre probar las funciones** con los logs de debugging habilitados
-
-#### Migración y compatibilidad
-
-- **Funciones existentes:** Las funciones JavaScript que escriben directamente a la respuesta continuarán funcionando sin cambios (modo direct response)
-- **Nuevas funciones:** Puedes elegir cualquier enfoque:
-  - **Modo return value:** Más simple, más consistente con funciones de base de datos
-  - **Modo direct response:** Más control sobre formato de respuesta y headers
 
 ### 2. PL/pgSQL
 
@@ -294,16 +104,26 @@ function mightReturnUndefined() {
 
 **Implementación:**
 ```java
-// En com.niledb.platform/src/main/java/workflows/db/repository/CustomRepository.java (líneas 42-58)
-String sql = String.format("select \"%s\".\"%s\" (%s)", schema, function, params);
-return client.preparedQuery(sql).execute()
-    .map(rows -> {
-        RowIterator<Row> it = rows.iterator();
-        if (it.hasNext()) {
-            return it.next().getValue(0);
-        }
-        return null;
-    });
+// helpers/FunctionsHandler.java
+Connection connection = DatabaseHelper.getConnection(accessToken);
+PreparedStatement ps = connection.prepareStatement(
+    "SELECT \"" + functionName.split("\\.")[0] + "\".\"" + functionName.split("\\.")[1] +
+    "\"(" + (parameterNames != null ? String.join(", ", "?".repeat(parameterNames.length).split("")) : "") + ") as \"result\"");
+// Vinculación por tipos (text, int, numeric, boolean, date) y valores null
+ResultSet rs = ps.executeQuery();
+ResultSetMetaData rsmd = rs.getMetaData();
+int columnCount = rsmd.getColumnCount();
+JsonArray jsonArray = new JsonArray();
+while (rs.next()) {
+    JsonObject jsonObject = new JsonObject();
+    for (int i = 1; i <= columnCount; i++) {
+        String columnName = rsmd.getColumnLabel(i);
+        Object value = rs.getObject(i);
+        jsonObject.put(columnName, value);
+    }
+    jsonArray.add(jsonObject);
+}
+response.end(jsonArray.encodePrettily());
 ```
 
 ### 3. PL/Python3U
@@ -324,7 +144,7 @@ return client.preparedQuery(sql).execute()
 Las funciones Python se ejecutan como funciones de base de datos usando una declaración `SELECT`:
 
 ```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHandler.java (líneas 134-136)
+// helpers/FunctionsHandler.java
 PreparedStatement ps = connection.prepareStatement(
     "SELECT \"" + functionName.split("\\.")[0] + "\".\"" + functionName.split("\\.")[1] + "\"(" + 
     (parameterNames != null ? String.join(", ", "?".repeat(parameterNames.length).split("")) : "") + 
@@ -336,7 +156,7 @@ PreparedStatement ps = connection.prepareStatement(
 El sistema procesa el `ResultSet` y convierte cada fila a un objeto JSON:
 
 ```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHandler.java (líneas 187-199)
+// helpers/FunctionsHandler.java
 while (rs.next()) {
     JsonObject jsonObject = new JsonObject();
     for (int i = 1; i <= columnCount; i++) {
@@ -368,11 +188,7 @@ while (rs.next()) {
 
 #### Comparación con funciones JavaScript
 
-Las funciones JavaScript tienen más flexibilidad:
-- **Modo return value**: Pueden retornar valores que se formatean como arrays (similar a Python)
-- **Modo direct response**: Pueden escribir directamente a la respuesta HTTP con formato personalizado
-
-Pero las funciones Python siempre se procesan a través de la capa de base de datos, lo que impone el formato de array.
+Las funciones JavaScript escriben directamente a la respuesta HTTP con el formato que el script decida. Las funciones Python siempre se procesan a través de la capa de base de datos, lo que impone el formato de array.
 
 **Conclusión**: Las funciones Python en el endpoint `/functions/` siempre retornarán sus resultados envueltos en una estructura de array JSON.
 
@@ -387,8 +203,7 @@ Los parámetros se pasan a través del contexto HTTP con tres métodos diferente
 function myFunction() {
     var request = routingContext.request();
     var param = request.getParam("parameterName");
-    // Usar el parámetro
-    return "Hello, " + param + "!";
+    routingContext.response().putHeader("Content-Type", "application/json").end(JSON.stringify({result: "Hello, " + param + "!"}));
 }
 ```
 
@@ -399,8 +214,7 @@ function myFunction() {
 function myFunction() {
     var request = routingContext.request();
     var param = request.getHeader("parameterName");
-    // Usar el parámetro
-    return "Hello, " + param + "!";
+    routingContext.response().putHeader("Content-Type", "application/json").end(JSON.stringify({result: "Hello, " + param + "!"}));
 }
 ```
 
@@ -411,8 +225,7 @@ function myFunction() {
 function myFunction() {
     var body = routingContext.body().asJsonObject();
     var param = body.getString("parameterName");
-    // Usar el parámetro
-    return "Hello, " + param + "!";
+    routingContext.response().putHeader("Content-Type", "application/json").end(JSON.stringify({result: "Hello, " + param + "!"}));
 }
 ```
 
@@ -429,23 +242,12 @@ function processData() {
     var request = routingContext.request();
     var body = routingContext.body().asJsonObject();
     
-    // Obtener de query parameters
     var queryParam = request.getParam("queryParam");
-    
-    // Obtener de headers
     var headerParam = request.getHeader("headerParam");
-    
-    // Obtener de JSON body
     var bodyParam = body.getString("bodyParam");
     
-    // Procesar los datos
-    var result = {
-        query: queryParam,
-        header: headerParam,
-        body: bodyParam
-    };
-    
-    return result;
+    var result = { query: queryParam, header: headerParam, body: bodyParam };
+    routingContext.response().putHeader("Content-Type", "application/json").end(JSON.stringify({ result: result }));
 }
 ```
 
@@ -573,24 +375,104 @@ curl "http://localhost:8080/functions/MySchema.analyzeData?input_text=sample&thr
 ]
 ```
 
-#### Implementación técnica del procesamiento de parámetros
+#### Cómo se parsean los parámetros (PL/pgSQL y PL/Python3U)
+
+- Definición: se activa sólo si la función está marcada como personalizada (`isCustomFunction=true`) y define `customParameters` en `Models.Function`.
+- Formato de `customParameters`: lista separada por comas con nombre y tipo por parámetro. Ej.: `"param1 text, param2 int, access_token text"`. Se eliminan comillas y espacios extra.
+- Precedencia de fuentes por nombre de parámetro: JSON body > query string > header.
+  - El body JSON sólo se considera si `Content-Type` es exactamente `application/json`.
+- Parámetro especial `access_token`: si existe en `customParameters`, se rellena automáticamente con el token extraído de `Authorization` (se toma la segunda parte al dividir por espacio, p. ej. `Bearer <token>`).
+- Tipos soportados: `text`, `int`, `numeric`, `boolean`, `date`. Cualquier otro tipo se vincula como `VARCHAR`.
+- Conversión de tipos: si viene del body JSON, se respeta el tipo nativo (boolean, number, string). Si viene de query/header (string), el driver realiza la conversión al tipo indicado al hacer `setObject(..., Types.XXX)`.
+- Nulos: si un parámetro no llega en ninguna fuente, se envía `NULL` con el tipo indicado (`setNull(..., Types.XXX)`).
+- Orden en la SQL: los placeholders `?` se generan en el mismo orden que aparecen en `customParameters` (aunque los valores se busquen por nombre).
+- Si no hay `customParameters`, la invocación se hace sin placeholders (no se admite paso de parámetros por nombre en ese caso).
+
+Código relevante (simplificado):
+
 ```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHandler.java (líneas 71-99)
-// Parsing de parámetros personalizados
+// helpers/FunctionsHandler.java - Resolución de fuentes y tipos
 String[] parameters = FunctionsHelper.plCustomFunctionsParameters.get(functionName).split(",");
 for (int i = 0; i < parameters.length; i++) {
-    String paramName = parameters[i].split("\\s+")[0];
-    String paramType = parameters[i].split("\\s+")[1];
-    
-    // Mapeo de tipos (líneas 134-153)
-    switch (paramType) {
+    parameters[i] = parameters[i].trim().replaceAll("\"", "").trim();
+    parameterNames[i] = parameters[i].split("\\s+")[0];
+    parameterTypes[i] = parameters[i].split("\\s+")[1];
+
+    Object jsonValue = jsonBody != null ? jsonBody.getValue(parameterNames[i]) : null;
+    String headerValue = request.getHeader(parameterNames[i]);
+    String parameterValue = request.getParam(parameterNames[i]);
+
+    parameterValues[i] = jsonValue != null ? jsonValue : (parameterValue != null ? parameterValue : headerValue);
+    if (parameterNames[i].equals("access_token")) {
+        parameterValues[i] = accessToken; // extraído de Authorization
+    }
+}
+
+// helpers/FunctionsHandler.java - Vinculación por tipo y manejo de nulls
+if (parameterValues[i] != null) {
+    switch (parameterTypes[i]) {
         case "text": ps.setObject(i + 1, parameterValues[i], Types.VARCHAR); break;
         case "int": ps.setObject(i + 1, parameterValues[i], Types.INTEGER); break;
         case "numeric": ps.setObject(i + 1, parameterValues[i], Types.NUMERIC); break;
         case "boolean": ps.setObject(i + 1, parameterValues[i], Types.BOOLEAN); break;
         case "date": ps.setObject(i + 1, parameterValues[i], Types.DATE); break;
+        default: ps.setObject(i + 1, parameterValues[i], Types.VARCHAR);
+    }
+} else {
+    switch (parameterTypes[i]) {
+        case "text": ps.setNull(i + 1, Types.VARCHAR); break;
+        case "int": ps.setNull(i + 1, Types.INTEGER); break;
+        case "numeric": ps.setNull(i + 1, Types.NUMERIC); break;
+        case "boolean": ps.setNull(i + 1, Types.BOOLEAN); break;
+        case "date": ps.setNull(i + 1, Types.DATE); break;
+        default: ps.setNull(i + 1, Types.VARCHAR);
     }
 }
+```
+
+#### Mapeo de tipos (PL)
+
+| Tipo `customParameters` | JDBC Type usado | Valor esperado si viene de body JSON | Valor esperado si viene de query/header |
+|-------------------------|-----------------|--------------------------------------|----------------------------------------|
+| `text`                  | `Types.VARCHAR` | string                               | string                                 |
+| `int`                   | `Types.INTEGER` | number (entero)                       | string convertible a entero            |
+| `numeric`               | `Types.NUMERIC` | number                                | string convertible a número            |
+| `boolean`               | `Types.BOOLEAN` | boolean                               | `"true"`/`"false"`                    |
+| `date`                  | `Types.DATE`    | string fecha compatible JDBC          | string fecha compatible JDBC           |
+
+Notas:
+- Si el valor no llega, se envía `NULL` del tipo correspondiente.
+- Tipos no listados se envían como `Types.VARCHAR`.
+
+#### Ejemplos de combinación de fuentes
+
+```bash
+# helpers/FunctionsHandler.java - Ejemplo de invocación
+# Suponga customParameters: "q text, flag boolean, threshold int, access_token text"
+
+# 1) Prioridad JSON sobre query/header
+curl -X POST "http://localhost:8080/functions/MySchema.myFunc?q=fromQuery&flag=true" \
+  -H "flag: false" \
+  -H "Authorization: Bearer XYZ" \
+  -H "Content-Type: application/json" \
+  -d '{"q":"fromBody","threshold": 10}'
+
+# Resultado de binding:
+# q -> "fromBody" (JSON)
+# flag -> "true" (query) porque JSON no lo define; se convierte a boolean
+# threshold -> 10 (JSON)
+# access_token -> "XYZ" (Authorization)
+
+# 2) Sin JSON, cae a query y luego header
+curl "http://localhost:8080/functions/MySchema.myFunc?q=fromQuery&threshold=7" \
+  -H "flag: false" \
+  -H "Authorization: Bearer XYZ"
+
+# Resultado de binding:
+# q -> "fromQuery"
+# flag -> "false" (header)
+# threshold -> 7 (query)
+# access_token -> "XYZ"
 ```
 
 ### Comparación de métodos de paso de parámetros
@@ -661,7 +543,7 @@ return Future.succeededFuture("");
 
 ### Para funciones de base de datos (PL/pgSQL y PL/Python3U)
 
-**Procesamiento de resultados:**
+**Procesamiento de resultados (PL):**
 
 1. **Captura del ResultSet:**
 ```java
@@ -688,11 +570,11 @@ while (rs.next()) {
 
 3. **Formato de respuesta:**
 ```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHandler.java (línea 201)
+// helpers/FunctionsHandler.java
 response.end(jsonArray.encodePrettily());
 ```
 
-### Formato de respuesta estándar
+### Formato de respuesta estándar (PL)
 
 Para funciones de base de datos (PL/pgSQL y PL/Python3U), el resultado se formatea como:
 
@@ -708,10 +590,10 @@ Para funciones de base de datos (PL/pgSQL y PL/Python3U), el resultado se format
 
 | Aspecto | JavaScript | PL/pgSQL y PL/Python3U |
 |---------|------------|------------------------|
-| **Flexibilidad de formato** | Alta - dos modos de ejecución | Baja - siempre formato array |
-| **Modo return value** | ✅ Opcional | ✅ Siempre aplicado |
-| **Modo direct response** | ✅ Disponible | ❌ No disponible |
-| **Control de headers** | ✅ Completo | ❌ Limitado |
+| **Flexibilidad de formato** | Alta - script decide el formato | Baja - siempre formato array |
+| **Modo return value** | ❌ No disponible | ✅ Siempre aplicado |
+| **Modo direct response** | ✅ Sí | ❌ No |
+| **Control de headers** | ✅ Completo (a cargo del script) | ❌ Limitado |
 | **Formato de respuesta** | Variable según modo | Siempre `[{"result": "valor"}]` |
 | **Ejecución** | En memoria (JVM) | En base de datos |
 | **Overhead** | Mínimo | Mayor (conexión DB) |
@@ -729,14 +611,12 @@ Para funciones de base de datos (PL/pgSQL y PL/Python3U), el resultado se format
 Las funciones se cargan dinámicamente desde la tabla `Models.Function`:
 
 ```sql
--- En com.niledb.platform/src/main/java/helpers/FunctionsHelper.java (línea 118)
 -- Para JavaScript
 SELECT schema, name, contents, "cronExpression", "isHttpEnabled", 
        "interceptHttpRequests", "interceptSelects" 
 FROM "Models"."Function" 
 WHERE language = 'ECMAScriptNashorn'
 
--- En com.niledb.platform/src/main/java/helpers/FunctionsHelper.java (línea 151)
 -- Para PL/pgSQL y PL/Python3U
 SELECT schema, name, contents, "cronExpression", "isHttpEnabled", 
        "interceptHttpRequests", "interceptSelects", "isCustomFunction", 
@@ -758,71 +638,24 @@ WHERE language = 'plpython3u' OR language = 'plpgsql'
 
 ### Para funciones JavaScript
 
-#### Manejo de errores mejorado
-```java
-// En com.niledb.platform/src/main/java/workflows/usecase/FunctionExecutor.java (líneas 77-91)
-try {
-    FunctionsHelper.engine.eval(FunctionsHelper.functions.get(functionName), context);
-} catch (Exception ex) {
-    if (routingContext != null) {
-        routingContext.response().setStatusCode(500).end("Error executing Javascript function");
-    }
-    return Future.failedFuture("Error executing Javascript function");
-}
-```
-
-#### Nuevo sistema de manejo de errores
-```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHelper.java
-// Los errores son capturados y retornados como respuestas HTTP 500
-{
-  "error": "Error executing JavaScript function: [detalles del error]"
-}
-```
-
-#### Logs de debugging para errores
-```
-JavaScript function MySchema.myFunction executed. Result: null, Type: null
-Using DIRECT_RESPONSE mode for function MySchema.myFunction
-Function didn't write to response, sending default 'ok' response
-```
-
-#### Casos de error comunes
-1. **Función retorna undefined**: Genera respuesta "ok" por defecto
-2. **Función no retorna nada**: Genera respuesta "ok" por defecto  
-3. **Error de sintaxis JavaScript**: Capturado y retornado como error HTTP 500
-4. **Error de ejecución**: Capturado y retornado como error HTTP 500
+Las excepciones durante la evaluación del script se capturan y se finaliza la respuesta, pero no se establece un payload JSON de error automáticamente. Se recomienda que el propio script gestione códigos de estado y mensajes de error.
 
 ### Para funciones de base de datos
 
-```java
-// En com.niledb.platform/src/main/java/workflows/usecase/FunctionExecutor.java (líneas 121-124)
-try {
-    // Ejecución de la función
-} catch (Exception ex) {
-    log.error("Error executing database function {}: {}", functionName, ex.getMessage(), ex);
-    return Future.succeededFuture("error: " + ex.getMessage());
-}
-```
+Los errores en funciones PL/pgSQL o PL/Python3U se propagan como parte de la ejecución SQL; la respuesta HTTP contendrá el resultado o fallará si la ejecución lanza excepción.
 
 ## Configuración CORS
 
 El endpoint incluye configuración CORS completa:
 
 ```java
-// En com.niledb.platform/src/main/java/helpers/FunctionsHandler.java (líneas 113-123)
-String origin = request.headers().get("Origin");
-if (origin != null && !origin.equals("")) {
-    headers.add("Access-Control-Allow-Origin", origin);
-    headers.add("Access-Control-Allow-Credentials", "true");
-    headers.add("Vary", "Accept-Encoding, Origin");
-} else {
-    headers.add("Access-Control-Allow-Origin", "*");
-}
+// OPTIONS en HttpVerticle para /functions
+headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+headers.add("Access-Control-Allow-Headers", "*");
+
+// Respuestas PL en FunctionsHandler (DB)
 headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS, HEAD");
-headers.add("Access-Control-Allow-Headers", 
-    "X-Apollo-Tracing, Authorization, Cache-Control, X-XSRF, Origin, " +
-    "X-Requested-With, Content-Type, Accept, Content-Length");
+headers.add("Access-Control-Allow-Headers", "X-Apollo-Tracing, Authorization, Cache-Control, X-XSRF, Origin, X-Requested-With, Content-Type, Accept, Content-Length");
 ```
 
 ## Casos de uso
@@ -844,38 +677,14 @@ headers.add("Access-Control-Allow-Headers",
 
 ## Consideraciones de rendimiento
 
-1. **JavaScript**: Ejecución en memoria, ideal para operaciones rápidas
-   - **Nuevo**: Captura de valores de retorno sin overhead adicional
-   - **Nuevo**: Detección automática de modo de ejecución optimizada
+1. **JavaScript**: Ejecución en memoria (JVM), ideal para operaciones rápidas; formateo de respuesta a cargo del script
 2. **PL/pgSQL**: Ejecución en base de datos, optimizada para operaciones SQL
 3. **PL/Python3U**: Ejecución híbrida, balance entre flexibilidad y rendimiento
 
-## Beneficios del nuevo sistema JavaScript
+## Notas sobre desarrollo
 
-### 1. Consistencia
-- Las funciones JavaScript ahora pueden retornar valores como las funciones de base de datos
-- Formato de respuesta uniforme: `[{"result": "valor"}]`
-- API consistente entre todos los tipos de funciones
-
-### 2. Compatibilidad hacia atrás
-- Las funciones existentes que escriben directamente a la respuesta continúan funcionando
-- No se requieren cambios en el código existente
-- Migración gradual posible
-
-### 3. Flexibilidad
-- Elegir el enfoque que mejor se adapte al caso de uso
-- **Return value mode**: Más simple para procesamiento de datos
-- **Direct response mode**: Más control para respuestas complejas
-
-### 4. Manejo de errores mejorado
-- Captura y reporte de errores mejorado
-- Logs de debugging detallados
-- Respuestas de error estructuradas
-
-### 5. Experiencia de desarrollo
-- Debugging más fácil con logs detallados
-- Testing más simple con casos de prueba claros
-- Documentación completa de problemas comunes
+- Las funciones JavaScript deben finalizar la respuesta HTTP; no hay envoltorio automático del retorno.
+- Para funciones PL personalizadas, el orden y tipo de `customParameters` determinan el binding.
 
 ## Seguridad
 
@@ -888,15 +697,9 @@ headers.add("Access-Control-Allow-Headers",
 
 El endpoint `/functions/` proporciona una arquitectura flexible y robusta para la ejecución de funciones almacenadas, soportando múltiples lenguajes de programación y ofreciendo diferentes niveles de integración con el sistema HTTP y la base de datos. 
 
-### Mejoras significativas en JavaScript
+### Comportamiento de JavaScript
 
-El sistema JavaScript ha sido significativamente mejorado con:
-
-- **Captura de valores de retorno**: Las funciones JavaScript ahora pueden retornar valores que se formatean automáticamente como JSON
-- **Dos modos de ejecución**: Return value mode (nuevo) y Direct response mode (legacy)
-- **Detección automática**: El sistema detecta automáticamente qué modo usar
-- **Debugging mejorado**: Logs detallados para facilitar el desarrollo y troubleshooting
-- **Compatibilidad total**: Las funciones existentes continúan funcionando sin cambios
+Actualmente, los scripts controlan completamente la respuesta HTTP (status, headers y body). No existe modo de captura automática del valor de retorno.
 
 ### Comportamiento específico de Python (PL/Python3U)
 

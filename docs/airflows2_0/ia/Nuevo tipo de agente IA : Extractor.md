@@ -13,6 +13,7 @@ Esto se ha hecho para poder configurar los extractores
 model/applications/aia/entities/Agent.airflows
 NEW PROPERTIES:
 
+```text
 attribute distillPreprocessFunction {
     group: extractor
     label en_US: "Preprocess function"
@@ -130,6 +131,7 @@ trigger setupExtractors {
     function: aia.setupExtractors
     moment: AFTER
 }
+```
 
 
 model/applications/aia/enumTypes/AgentType.airflows
@@ -141,6 +143,7 @@ NEW PROPERTIES:
 
 NEW TYPES:
 model/applications/aia/enumTypes/DistillFileType.airflows
+```text
 enumType aia.DistillFileType {
     labels en_US: "HTML" "PDF" "TXT"
     values: "html" "pdf" "txt"
@@ -152,12 +155,15 @@ enumType aia.ExtractorSubType {
     labels en_US: "Distill" "RAG"
     values: "Distill" "RAG"
 }
+```
 
 model/applications/aia/functions/setupExtractors.airflows
+```text
 function aia.setupExtractors {
     language: plpgsql
     path: "applications/aia/functions/setupExtractors.pgsql"
 }
+```
 
 model/applications/aia/functions/setupExtractors.pgsql
 DECLARE
@@ -209,21 +215,24 @@ es capaz de crear la función de procesado de document
 es capaz de actualizar la función
 ejemplo de conversion rules y schema
 conversion rules
+```json
 {
-  "prompt": "Extrae metadatos. Devuelve JSON con {metadata:
-{title,summary}}. Si falta algo, deja vacío.",
-  "dateFormats": ["yyyy-MM-dd","dd/MM/yyyy"],
+  "prompt": "Extrae metadatos. Devuelve JSON con {metadata:{title,summary}}. Si falta algo, deja vacío.",
+  "dateFormats": ["yyyy-MM-dd", "dd/MM/yyyy"],
   "coerce": { "clauses[].pos": "int" },
-  "valueMaps": { "metadata.lang": { "ES":"es", "EN":"en" } }
+  "valueMaps": { "metadata.lang": { "ES": "es", "EN": "en" } }
 }
+```
 json schema
+```json
 {
   "entity": "ReglamentoRunning.procesado",
   "fields": [
-    {"name": "titulo",   "source": "metadata.title"},
+    {"name": "titulo", "source": "metadata.title"},
     {"name": "resumen", "source": "metadata.summary"}
   ]
 }
+```
 Para RAG
 es capa de crear el formulario de document
 es capaz de leer los documentos, pasarlos por tika y recoger el texto
