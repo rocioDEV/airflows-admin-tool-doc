@@ -209,21 +209,24 @@ es capaz de crear la función de procesado de document
 es capaz de actualizar la función
 ejemplo de conversion rules y schema
 conversion rules
+```json
 {
-  "prompt": "Extrae metadatos. Devuelve JSON con {metadata:
-{title,summary}}. Si falta algo, deja vacío.",
-  "dateFormats": ["yyyy-MM-dd","dd/MM/yyyy"],
+  "prompt": "Extrae metadatos. Devuelve JSON con {metadata:{title,summary}}. Si falta algo, deja vacío.",
+  "dateFormats": ["yyyy-MM-dd", "dd/MM/yyyy"],
   "coerce": { "clauses[].pos": "int" },
-  "valueMaps": { "metadata.lang": { "ES":"es", "EN":"en" } }
+  "valueMaps": { "metadata.lang": { "ES": "es", "EN": "en" } }
 }
+```
 json schema
+```json
 {
   "entity": "ReglamentoRunning.procesado",
   "fields": [
-    {"name": "titulo",   "source": "metadata.title"},
+    {"name": "titulo", "source": "metadata.title"},
     {"name": "resumen", "source": "metadata.summary"}
   ]
 }
+```
 Para RAG
 es capa de crear el formulario de document
 es capaz de leer los documentos, pasarlos por tika y recoger el texto
