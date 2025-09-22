@@ -13,6 +13,7 @@ Esto se ha hecho para poder configurar los extractores
 model/applications/aia/entities/Agent.airflows
 NEW PROPERTIES:
 
+```text
 attribute distillPreprocessFunction {
     group: extractor
     label en_US: "Preprocess function"
@@ -130,6 +131,7 @@ trigger setupExtractors {
     function: aia.setupExtractors
     moment: AFTER
 }
+```
 
 
 model/applications/aia/enumTypes/AgentType.airflows
@@ -141,6 +143,7 @@ NEW PROPERTIES:
 
 NEW TYPES:
 model/applications/aia/enumTypes/DistillFileType.airflows
+```text
 enumType aia.DistillFileType {
     labels en_US: "HTML" "PDF" "TXT"
     values: "html" "pdf" "txt"
@@ -152,12 +155,15 @@ enumType aia.ExtractorSubType {
     labels en_US: "Distill" "RAG"
     values: "Distill" "RAG"
 }
+```
 
 model/applications/aia/functions/setupExtractors.airflows
+```text
 function aia.setupExtractors {
     language: plpgsql
     path: "applications/aia/functions/setupExtractors.pgsql"
 }
+```
 
 model/applications/aia/functions/setupExtractors.pgsql
 DECLARE
