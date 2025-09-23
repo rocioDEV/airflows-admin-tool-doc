@@ -1,0 +1,10 @@
+.docusaurus
+.vscode
+node_modules
+src
+static
+docusaurus.config.ts
+package.json
+pnpm-lock.yaml
+sidebars.ts
+tsconfig.json

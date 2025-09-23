@@ -56,7 +56,7 @@ El hook realiza los siguientes mapeos y transformaciones sobre los parámetros:
 - Los atributos se filtran utilizando la función `filterAttributes` para determinar cuáles deben incluirse en la consulta GraphQL.
 - **Condiciones**:
   - Excluir atributos con `incomingReferenceAttributeName`.
-  - Incluir atributos según su tipo (e.g., `TEXT`, `POINT`, `DOCUMENT`, `BPMN_EDITOR`).
+  - Incluir atributos según su tipo (e.g., `TEXT`, `POINT`, `DOCUMENT`).
   - Verificar si el atributo tiene un valor en `formValues`.
 
 ### **2. Construcción de Consultas GraphQL**
