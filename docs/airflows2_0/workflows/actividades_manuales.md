@@ -422,3 +422,5 @@ Las actividades manuales son el puente entre la automatización de procesos y la
 - La evaluación de condiciones permite flujos complejos de decisión
 
 Esta arquitectura proporciona flexibilidad para implementar procesos de negocio complejos mientras mantiene la simplicidad para los usuarios finales.
+
+
