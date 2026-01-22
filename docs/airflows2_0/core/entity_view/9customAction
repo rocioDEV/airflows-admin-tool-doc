@@ -1,8 +1,10 @@
 # Desencadenadores personalizados de entidad (`EntityCustomTrigger`)
 
+> ⚠️ **Estado de implementación**: El modelo de datos existe en el backend, pero **el frontend (airflows-admin-tool) no tiene implementada la funcionalidad** para mostrar y ejecutar estos triggers. Los registros de `EntityCustomTrigger` se pueden crear mediante el admin-tool (como cualquier otra entidad), pero no aparecerán como botones de acción en la vista de entidad.
+
 ## Propósito
 
-`EntityCustomTrigger` permite vincular funciones servidor — creadas en la tabla `Models.Function` — a una entidad de datos. El resultado es un “botón de acción” (en la pestaña **acciones**) que los usuarios, con los permisos correctos, pueden pulsar para ejecutar lógica de negocio en el backend sin modificar código Java.
+`EntityCustomTrigger` permite vincular funciones servidor — creadas en la tabla `Models.Function` — a una entidad de datos. El resultado **debería ser** un "botón de acción" (en la pestaña **acciones**) que los usuarios, con los permisos correctos, pueden pulsar para ejecutar lógica de negocio en el backend sin modificar código Java.
 
 ## Modelo de datos en la base de datos (PostgreSQL)
 
@@ -41,10 +43,12 @@ Implicaciones:
 * La selección de `FunctionViaFunction` abre el catálogo de funciones definidas en `Models.Function`.  
 * Las etiquetas multilanguage se gestionan en `EntityCustomTriggerLabel`.
 
-## Flujo de ejecución en tiempo de ejecución
+## Flujo de ejecución en tiempo de ejecución (diseño previsto)
 
-1. El cliente React llama a la mutación GraphQL `executeCustomTrigger(triggerId, pkVals)`  
-2. El resolver genérico del servidor realiza:  
+> ⚠️ **No implementado en el frontend**: La mutación `executeCustomTrigger` no se invoca desde el admin-tool actual.
+
+1. El cliente React llamaría a la mutación GraphQL `executeCustomTrigger(triggerId, pkVals)`  
+2. El resolver genérico del servidor realizaría:  
    a. Verificación de permisos en `CustomTriggerPermission`  
    b. Búsqueda de la columna `function` en `EntityCustomTrigger`  
    c. Ejecución de la función; se inyectan variables de contexto (`$user`, `$row`, …)  
@@ -59,7 +63,7 @@ No existe código Java específico; todo se basa en metadatos.
 3. Insertar traducciones en `Models.EntityCustomTriggerLabel`.  
 4. Asignar permisos en `Models.CustomTriggerPermission` para cada rol.  
 
-Tras guardar, el disparador aparece inmediatamente en la pestaña **acciones** para los usuarios autorizados.
+~~Tras guardar, el disparador aparece inmediatamente en la pestaña **acciones** para los usuarios autorizados.~~ (Pendiente de implementar en el frontend)
 
 ## Buenas prácticas y advertencias
 
@@ -69,9 +73,17 @@ Tras guardar, el disparador aparece inmediatamente en la pestaña **acciones** p
 
 ## Resumen
 
-`EntityCustomTrigger` ofrece una forma declarativa de:
+`EntityCustomTrigger` **ofrecería** una forma declarativa de:
 
 * Exponer lógica de backend a los usuarios finales,  
 * Mantener la seguridad mediante `CustomTriggerPermission`,  
 * Y traducir la interfaz sin tocar el código fuente.
 
+## Pendiente de implementación
+
+Para completar esta funcionalidad en el frontend (airflows-admin-tool) se necesitaría:
+
+1. Consultar los custom triggers asociados a la entidad actual (vía `EntityCustomTriggerListViaContainer`)
+2. Renderizar botones de acción en la vista de entidad para cada trigger con permisos válidos
+3. Implementar la llamada a la mutación `executeCustomTrigger(triggerId, pkVals)` al pulsar el botón
+4. Mostrar feedback del resultado de la ejecución
